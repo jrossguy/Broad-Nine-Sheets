@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escanor — Vessel of Ra</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#c8922a;--gl:#f0c060;--gd:#7a5520;
+  --nb:#0d0f1a;--nc:#13172a;--nbd:#1e2440;--nt:#c8cfe8;--ns:#6070a8;
+  --db:#1a0e00;--dc:#221200;--dbd:#4a2a00;--dt:#f5dfa0;--ds:#a07030;
+  --cov:#ef9f27;
+  --wkbg:#3a0f0f;--wkbr:#6a1a1a;--wktx:#f07070;
+  --rsbg:#0f2a0f;--rsbr:#1a5a1a;--rstx:#70c070;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--nb);color:var(--nt);font-family:'Crimson Pro',serif;font-size:15px;line-height:1.5;transition:background .4s,color .4s,border-color .4s;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% -20%,rgba(200,146,42,.07) 0%,transparent 60%);pointer-events:none;z-index:0;}
+.w{max-width:860px;margin:0 auto;padding:24px 16px 48px;position:relative;z-index:1;}
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--nbd);}
+.cname{font-family:'Cinzel',serif;font-size:28px;font-weight:700;letter-spacing:.04em;color:var(--gold);text-shadow:0 0 30px rgba(200,146,42,.3);margin-bottom:4px;}
+.csub{font-size:12px;color:var(--ns);font-style:italic;}
+.hdr-r{text-align:right;}
+.tier{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;padding:3px 10px;border-radius:3px;border:1px solid;margin-bottom:6px;}
+.tier-n{background:rgba(100,120,200,.12);border-color:#3a4a8a;color:#8898d8;}
+.tier-d{background:rgba(200,146,42,.15);border-color:var(--gd);color:var(--gl);}
+.mvlbl{font-size:11px;color:var(--ns);}
+.mvval{font-family:'Cinzel',serif;font-size:22px;font-weight:600;color:var(--gold);}
+.trow{display:flex;gap:8px;margin-bottom:20px;}
+.tbtn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.06em;padding:8px 18px;border-radius:3px;border:1px solid;cursor:pointer;transition:all .3s;background:transparent;}
+.tn{border-color:#3a4a8a;color:#8898d8;}
+.tn.on{background:rgba(100,120,200,.2);color:#b0c0f0;border-color:#6070b8;}
+.td{border-color:var(--gd);color:var(--ds);}
+.td.on{background:rgba(200,146,42,.2);color:var(--gl);border-color:var(--gold);}
+.ban{border-radius:4px;padding:12px 16px;margin-bottom:20px;font-size:13px;line-height:1.7;border:1px solid;}
+.ban-n{background:rgba(30,40,80,.5);border-color:#2a3a6a;}
+.ban-d{background:rgba(50,25,0,.6);border-color:var(--gd);}
+.ban strong{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.04em;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;}
+@media(max-width:600px){.g2{grid-template-columns:1fr;}.g3{grid-template-columns:1fr 1fr;}}
+.card{background:var(--nc);border:1px solid var(--nbd);border-radius:4px;padding:14px 16px;}
+.csm{background:rgba(255,255,255,.03);border:1px solid var(--nbd);border-radius:4px;padding:10px 12px;}
+.stitle{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;color:var(--ns);text-transform:uppercase;margin-bottom:10px;}
+.ar{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--nbd);font-size:14px;}
+.ar:last-of-type{border-bottom:none;}
+.an{color:var(--ns);font-size:12px;font-style:italic;}
+.av{font-family:'Cinzel',serif;font-size:13px;font-weight:600;}
+.am{font-size:11px;color:var(--ns);margin-left:4px;}
+.bv{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--gold);}
+.slbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;color:var(--ns);text-transform:uppercase;margin-bottom:4px;}
+.sn{font-size:11px;color:var(--ns);margin-top:4px;font-style:italic;}
+.bt{background:rgba(255,255,255,.06);border-radius:2px;height:5px;margin-top:6px;overflow:hidden;}
+.bf{height:100%;border-radius:2px;transition:width .5s,background .5s;}
+.skr{display:flex;align-items:baseline;justify-content:space-between;gap:6px;padding:3px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,.04);}
+.skr:last-child{border-bottom:none;}
+.skn{color:var(--ns);flex-shrink:0;font-style:italic;}
+.skb{font-size:10px;color:var(--ns);flex:1;text-align:right;opacity:.6;}
+.skv{font-family:'Cinzel',serif;font-weight:600;font-size:13px;min-width:28px;text-align:right;flex-shrink:0;}
+.swapnote{background:rgba(255,255,255,.03);border:1px solid var(--nbd);border-radius:4px;padding:9px 14px;margin-bottom:12px;font-size:12px;color:var(--ns);font-style:italic;}
+.swapnote strong{font-style:normal;color:var(--nt);}
+.bdg{display:inline-block;font-size:10px;font-family:'Cinzel',serif;letter-spacing:.04em;padding:1px 6px;border-radius:2px;margin-left:4px;border:1px solid;}
+.bn{background:rgba(80,100,180,.15);border-color:#3a4a8a;color:#8898d8;}
+.bd{background:rgba(200,146,42,.15);border-color:var(--gd);color:var(--gold);}
+.bi{background:rgba(60,80,160,.2);border-color:#3040a0;color:#8090e0;}
+.wkb{display:inline-block;font-size:10px;font-family:'Cinzel',serif;padding:2px 7px;border-radius:2px;border:1px solid;background:var(--wkbg);border-color:var(--wkbr);color:var(--wktx);margin:1px 2px;}
+.rsb{display:inline-block;font-size:10px;font-family:'Cinzel',serif;padding:2px 7px;border-radius:2px;border:1px solid;background:var(--rsbg);border-color:var(--rsbr);color:var(--rstx);margin:1px 2px;}
+.dp{display:inline-block;font-size:10px;font-family:'Cinzel',serif;padding:2px 7px;border-radius:2px;background:#2a2820;color:#c8c0a0;margin-right:3px;}
+.df{display:inline-block;font-size:10px;font-family:'Cinzel',serif;padding:2px 7px;border-radius:2px;background:#3a1800;color:#f09050;margin-right:3px;}
+.dl{display:inline-block;font-size:10px;font-family:'Cinzel',serif;padding:2px 7px;border-radius:2px;background:#2a2800;color:#e0d060;margin-right:3px;}
+.acard{border-left:2px solid;padding:10px 14px;margin-bottom:8px;border-radius:0 4px 4px 0;background:rgba(255,255,255,.02);}
+.acard:last-child{margin-bottom:0;}
+.ag{border-color:var(--gold);}
+.ab{border-color:#5060b8;}
+.ap{border-color:#7060c0;}
+.aname{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;margin-bottom:4px;}
+.atype{font-size:10px;color:var(--ns);margin-left:6px;font-style:italic;}
+.adesc{font-size:13px;line-height:1.6;}
+.adesc strong{color:var(--gl);}
+.pf{text-align:center;padding:12px;border:1px solid #5060b0;border-radius:3px;background:rgba(80,90,180,.08);margin-bottom:14px;}
+.pft{font-family:'Cinzel',serif;font-size:18px;font-weight:600;color:#a0a8f0;letter-spacing:.06em;}
+.pfs{font-size:11px;color:var(--ns);margin-top:4px;font-style:italic;}
+.pr{display:grid;grid-template-columns:62px 1fr 40px;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);gap:8px;align-items:center;}
+.pr:last-child{border-bottom:none;}
+.proll{color:var(--ns);font-style:italic;font-size:11px;}
+.pcov{font-family:'Cinzel',serif;font-weight:600;text-align:right;color:var(--gold);}
+.sim-g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;}
+.sim-c{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:3px;padding:8px;text-align:center;}
+.sim-l{font-size:10px;color:var(--ns);margin-bottom:3px;}
+.sim-v{font-family:'Cinzel',serif;font-size:18px;font-weight:600;color:var(--gold);}
+.sim-s{font-size:10px;color:var(--ns);margin-top:2px;font-style:italic;}
+.dv{border:none;border-top:1px solid var(--nbd);margin:10px 0;}
+.rcard{border:1px solid var(--gd);border-radius:4px;padding:14px 16px;background:rgba(50,25,0,.5);margin-bottom:12px;}
+.rhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.exb{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.06em;padding:2px 8px;background:var(--gd);color:var(--gl);border-radius:2px;}
+.dov{border:1px solid var(--gd);border-radius:4px;padding:14px 16px;background:rgba(50,25,0,.4);margin-bottom:12px;}
+.dgold{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.06em;color:var(--gold);margin-bottom:6px;}
+.fbar{margin-top:24px;padding-top:12px;border-top:1px solid var(--nbd);font-size:11px;color:var(--ns);line-height:1.9;font-style:italic;}
+.fbar strong{font-style:normal;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.06em;color:var(--nt);}
+</style>
+</head>
+<body>
+<div class="w">
+
+<div class="hdr">
+  <div>
+    <div class="cname">Escanor</div>
+    <div class="csub">Vessel of Ra &nbsp;·&nbsp; Level 1 &nbsp;·&nbsp; Birthright Covenant — Ra, Sun God &nbsp;·&nbsp; Ra has not spoken since birth</div>
+  </div>
+  <div class="hdr-r">
+    <div id="tier" class="tier tier-n">Standard · d20</div><br>
+    <span class="mvlbl">Movement &nbsp;</span><span class="mvval" id="mv">3</span>
+  </div>
+</div>
+
+<div class="trow">
+  <button class="tbtn tn on" id="nbtn" onclick="setM('night')">☽ Night Form</button>
+  <button class="tbtn td" id="dbtn" onclick="setM('day')">☀ Day Form — Ra's Wrath</button>
+</div>
+
+<div id="ban" class="ban ban-n">
+  <strong>Night Form — Ra has been silent since birth.</strong><br>
+  Standard (d20) · 1 attack/turn · Iron Longsword · Weak: Shadow, Ice · Skill swap: Heal → INT · Pool +1/turn · Plead to Ra (Bonus Action) scales with Perform investment.
+</div>
+
+<!-- ATTRS + STATS -->
+<div class="g2">
+  <div class="card">
+    <div class="stitle">Attributes</div>
+    <div class="ar"><span class="an">Strength</span>    <span class="av" id="aSTR">7 <span class="am">(+0)</span></span></div>
+    <div class="ar"><span class="an">Dexterity</span>   <span class="av">6 <span class="am">(+0)</span></span></div>
+    <div class="ar"><span class="an">Constitution</span><span class="av" id="aCON">6 <span class="am">(+0)</span></span></div>
+    <div class="ar"><span class="an" id="intlbl">Intelligence</span><span class="av" id="aINT">8 <span class="am">(+1)</span></span></div>
+    <div class="ar"><span class="an" id="wislbl">Wisdom</span>      <span class="av" id="aWIS">1 <span class="am">(−3)</span></span></div>
+    <div class="ar"><span class="an">Charisma</span>    <span class="av">8 <span class="am">(+1)</span></span></div>
+  </div>
+  <div>
+    <div class="g2" style="margin-bottom:10px">
+      <div class="csm">
+        <div class="slbl">HP</div>
+        <div class="bv" id="hpv">25</div>
+        <div class="bt"><div class="bf" id="hpbar" style="width:26%;background:#3a6aa8"></div></div>
+        <div class="sn" id="hpn">Base 25 (CON +0)</div>
+      </div>
+      <div class="csm">
+        <div class="slbl">Covenant Pool</div>
+        <div class="bv" id="cvv">15 / 15</div>
+        <div class="bt"><div class="bf" style="width:100%;background:#ef9f27"></div></div>
+        <div class="sn" id="cvn">+1/turn · 15 turns to refill</div>
+      </div>
+    </div>
+    <div class="g3" style="margin-bottom:10px">
+      <div class="csm"><div class="slbl">Heal</div><div style="font-family:'Cinzel',serif;font-size:16px;font-weight:600" id="hcap">2 / 2</div><div class="sn" id="hcn">CON 6 → 2</div></div>
+      <div class="csm"><div class="slbl">Adrenaline</div><div style="font-family:'Cinzel',serif;font-size:16px;font-weight:600" id="acap">2 / 2</div><div class="sn" id="acn">CON 6 → 2</div></div>
+      <div class="csm"><div class="slbl">Repair</div><div style="font-family:'Cinzel',serif;font-size:16px;font-weight:600" id="rcap">2 / 2</div><div class="sn" id="rcn">CON 6 → 2</div></div>
+    </div>
+    <div class="csm" style="margin-bottom:10px">
+      <div class="slbl" id="wlbl">Night Weapon</div>
+      <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:600" id="wname">Iron Longsword</div>
+      <div class="sn" id="wdetail">d10 Physical · Melee · 1H · Attack: d20 + STR (+0)</div>
+    </div>
+    <div class="csm">
+      <div class="slbl">Attacks / Turn</div>
+      <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:600" id="atk">1 per Main Action</div>
+    </div>
+    <!-- Armor slot -->
+    <div style="background:rgba(255,255,255,.04);border:1px solid var(--nbd);border-radius:4px;padding:10px 12px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:12;">
+      <div style="flex:1;min-width:0;">
+        <div class="slbl">Armor</div>
+        <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--ns);font-style:italic;">— unequipped —</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div class="slbl">Armor HP</div>
+        <div style="font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--ns);">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS + RES/WEAK -->
+<div class="g2">
+  <div class="card">
+    <div class="stitle">Skills <span style="font-style:italic;font-weight:400;font-family:'Crimson Pro',serif;text-transform:none;letter-spacing:0;font-size:10px;opacity:.7">(mod · boost · training)</span></div>
+    <div class="skr"><span class="skn">Acrobatics <span style="font-size:10px;opacity:.5">(Dex)</span></span><span class="skb">mod+0</span><span class="skv">+0</span></div>
+    <div class="skr"><span class="skn">Athletics <span style="font-size:10px;opacity:.5">(Str)</span></span><span class="skb" id="s1b">mod+0, boost+3</span><span class="skv" id="s1">+3</span></div>
+    <div class="skr"><span class="skn">Awareness <span style="font-size:10px;opacity:.5">(Int)</span></span><span class="skb" id="s7b">mod+1, boost+1</span><span class="skv" id="s7">+2</span></div>
+    <div class="skr"><span class="skn">Engineering <span style="font-size:10px;opacity:.5">(Int)</span></span><span class="skb" id="s9b">mod+1</span><span class="skv" id="s9">+1</span></div>
+    <div class="skr"><span class="skn">Fortitude <span style="font-size:10px;opacity:.5">(Con)</span></span><span class="skb" id="sfortb">mod+0</span><span class="skv" id="sfort">+0</span></div>
+    <div class="skr"><span class="skn">Heal <span id="hswap" class="bdg bi">→ INT</span> <span style="font-size:10px;opacity:.5">(Wis)</span></span><span class="skb" id="s2b">mod+1, boost+2</span><span class="skv" id="s2">+3</span></div>
+    <div class="skr"><span class="skn">Intimidate <span id="iswap" class="bdg bn">CHR</span> <span style="font-size:10px;opacity:.5">(Chr)</span></span><span class="skb" id="s5b">mod+1</span><span class="skv" id="s5">+1</span></div>
+    <div class="skr"><span class="skn">Linguistics <span style="font-size:10px;opacity:.5">(Chr · T1)</span></span><span class="skb">mod+1, train+2</span><span class="skv">+3</span></div>
+    <div class="skr"><span class="skn">Nature <span style="font-size:10px;opacity:.5">(Wis)</span></span><span class="skb" id="snatb">mod−3</span><span class="skv" id="snat2">−3</span></div>
+    <div class="skr"><span class="skn">Nen <span style="font-size:10px;opacity:.5">(Wis)</span></span><span class="skb" id="snenb">mod−3</span><span class="skv" id="snen">−3</span></div>
+    <div class="skr"><span class="skn">Perform <span style="font-size:10px;opacity:.5">(Chr)</span></span><span class="skb">mod+1, boost+1</span><span class="skv">+2</span></div>
+    <div class="skr"><span class="skn">Ride <span style="font-size:10px;opacity:.5">(Int)</span></span><span class="skb" id="srideb">mod+1</span><span class="skv" id="sride">+1</span></div>
+    <div class="skr"><span class="skn">Sense Motive <span style="font-size:10px;opacity:.5">(Wis)</span></span><span class="skb" id="s8b">mod−3, boost+1</span><span class="skv" id="s8">−2</span></div>
+    <div class="skr"><span class="skn">Speech <span style="font-size:10px;opacity:.5">(Chr)</span></span><span class="skb">mod+1, boost+2</span><span class="skv">+3</span></div>
+    <div class="skr"><span class="skn">Stealth <span style="font-size:10px;opacity:.5">(Dex)</span></span><span class="skb">mod+0</span><span class="skv">+0</span></div>
+    <div class="skr"><span class="skn">Technology <span style="font-size:10px;opacity:.5">(Int)</span></span><span class="skb" id="stechb">mod+1</span><span class="skv" id="stech">+1</span></div>
+    <div class="skr"><span class="skn">Thieving <span style="font-size:10px;opacity:.5">(Dex)</span></span><span class="skb">mod+0</span><span class="skv">+0</span></div>
+  </div>
+  <div class="card">
+    <div class="stitle">Resistances &amp; Weaknesses</div>
+    <!-- Night res/weak -->
+    <div id="res-night">
+      <div class="skr"><span class="skn">Resist</span><span style="font-style:italic;font-size:12px;color:var(--ns)">None</span></div>
+      <div class="skr"><span class="skn">Weak</span><span><span class="wkb">Shadow</span><span class="wkb">Ice</span></span></div>
+    </div>
+    <!-- Day res/weak - hidden initially -->
+    <div id="res-day" style="display:none">
+      <div class="skr"><span class="skn">Resist</span><span><span class="rsb">Fire</span><span class="rsb">Light</span></span></div>
+      <div class="skr"><span class="skn">Weak</span><span><span class="wkb">Water</span></span></div>
+    </div>
+    <hr class="dv">
+    <div class="stitle">Resources</div>
+    <div class="skr"><span class="skn">Supplies</span><span style="font-family:'Cinzel',serif;font-size:12px">100 / 100</span></div>
+    <div class="skr"><span class="skn">Money</span><span style="font-family:'Cinzel',serif;font-size:12px">1M</span></div>
+    <div class="skr"><span class="skn">Carry weight</span><span style="font-family:'Cinzel',serif;font-size:12px" id="cw">70 lbs (STR 7)</span></div>
+    <div class="skr"><span class="skn">Languages</span><span style="font-family:'Cinzel',serif;font-size:12px">English · Solar script</span></div>
+    <hr class="dv">
+    <div class="stitle">Attribute Training (1/61)</div>
+    <div class="skr"><span class="skn">CHR T1 (permanent)</span><span style="font-family:'Cinzel',serif;font-size:12px">Linguistics +2</span></div>
+    <div class="skr"><span class="skn">STR T1+T2 (day form)</span><span id="stt" style="font-family:'Cinzel',serif;font-size:12px;color:var(--ns)">Inactive</span></div>
+    <div class="skr"><span class="skn">CON T1+T2 (day form)</span><span id="ctt" style="font-family:'Cinzel',serif;font-size:12px;color:var(--ns)">Inactive</span></div>
+  </div>
+</div>
+
+<!-- SWAP NOTE -->
+<div class="swapnote" id="swapnote">
+  Active swap: <strong>Heal → INT.</strong> &nbsp;Treats wounds like an equation, not instinct. &nbsp;·&nbsp; INT and WIS invert in day form — instinct replaces analysis.
+</div>
+
+<!-- PERKS -->
+<div class="card" style="margin-bottom:12px">
+  <div class="stitle">Perks</div>
+  <div class="g2">
+    <div class="acard ab"><div class="aname">Pact from Birth <span class="atype">Permanent</span></div><div class="adesc">Immune to supernatural fear, charm, and morale-breaking effects. Ra chose him before he could choose Ra.</div></div>
+    <div class="acard ab"><div class="aname">Ra's Mark <span class="atype">Cosmetic / Social</span></div><div class="adesc">Solar glyphs burn across skin when day form activates. Written in a script only Ra knows — Escanor cannot read his own markings.</div></div>
+  </div>
+</div>
+
+<!-- PLEAD TO RA — hidden in day form via JS -->
+<div id="plead-section">
+  <div class="card" style="margin-bottom:12px">
+    <div class="stitle">Night Ability</div>
+    <div class="acard ap">
+      <div class="aname">Plead to Ra <span class="atype">Night form only · Bonus Action · no limit per turn</span></div>
+      <div class="adesc" style="margin-bottom:12px">Make a Perform check. Covenant returned scales directly with the result — investing in Perform always pays off. A natural 1 always returns nothing regardless of modifier.</div>
+      <div class="pf">
+        <div class="pft">Covenant = floor( Perform roll ÷ 4 )</div>
+        <div class="pfs">Natural 1 → always 0 &nbsp;·&nbsp; No upper cap — scales with investment</div>
+      </div>
+      <div class="g2">
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;color:var(--ns);text-transform:uppercase;margin-bottom:8px">Reference breakpoints</div>
+          <div class="pr"><span class="proll">Nat 1</span><span style="color:var(--ns)">Complete silence</span><span class="pcov" style="color:#a05050">0</span></div>
+          <div class="pr"><span class="proll">2 – 7</span><span>A flicker, nothing more</span><span class="pcov">0–1</span></div>
+          <div class="pr"><span class="proll">8 – 11</span><span>The brand warms</span><span class="pcov">2</span></div>
+          <div class="pr"><span class="proll">12 – 15</span><span>Glyphs pulse briefly</span><span class="pcov">3</span></div>
+          <div class="pr"><span class="proll">16 – 19</span><span>Ra's presence felt</span><span class="pcov">4</span></div>
+          <div class="pr"><span class="proll">20 – 23</span><span>The sun shifts</span><span class="pcov">5</span></div>
+          <div class="pr"><span class="proll">24 – 27</span><span>Ra stirs in silence</span><span class="pcov">6</span></div>
+          <div class="pr"><span class="proll">28+</span><span>Ra remembers him</span><span class="pcov">7+</span></div>
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;color:var(--ns);text-transform:uppercase;margin-bottom:8px">Simulate investment</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <span style="font-size:11px;color:var(--ns);white-space:nowrap">Perform bonus</span>
+            <input type="range" min="0" max="20" value="2" id="pslider" step="1" style="flex:1;accent-color:#ef9f27">
+            <span style="font-family:'Cinzel',serif;font-weight:600;color:#c8922a;min-width:28px" id="pval">+2</span>
+          </div>
+          <div class="sim-g">
+            <div class="sim-c"><div class="sim-l">Avg return</div><div class="sim-v" id="savg">3</div><div class="sim-s" id="savgn">floor(12÷4)</div></div>
+            <div class="sim-c"><div class="sim-l">Nat 20</div><div class="sim-v" id="snat">5</div><div class="sim-s" id="snatn">floor(22÷4)</div></div>
+            <div class="sim-c"><div class="sim-l">Turns to refill</div><div class="sim-v" id="strns">~4</div><div class="sim-s">avg+1 passive</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAY FORM SECTION — hidden initially via JS -->
+<div id="day-section" style="display:none">
+  <div class="rcard">
+    <div class="rhdr">
+      <div class="stitle" style="margin:0;color:#c8922a">Rhitta — Conjured from Sunlight · Day Form Only</div>
+      <span class="exb">Exalted · Grade 5</span>
+    </div>
+    <div style="margin-bottom:6px"><span class="dp">1d10 Physical</span><span class="df">1d10 Fire</span><span class="dl">1d10 Light</span><span style="font-size:12px;color:#a07030">+ 3 (STR T2 proficiency)</span></div>
+    <div style="font-size:13px;color:#f5dfa0;line-height:1.7">Melee · 2H · Reach · Attack: <strong style="color:#f0c060">2d20 + STR (+8) + 3 bonus</strong> · Soul-bonded — no other wielder · Vanishes when form ends · Cannot be fully blocked — Full Blocks only halve damage</div>
+  </div>
+  <div class="dov">
+    <div class="stitle" style="color:#c8922a;margin-bottom:10px">Day Form Overview · Bonus Action to Activate · 3 Covenant/Turn · 5 Turns Max · Cannot Stop Early</div>
+    <div class="g2" style="font-size:13px;color:#f5dfa0">
+      <div>
+        <div class="dgold">Stat changes</div>
+        <div style="line-height:1.9">STR 7 → 23 (+8) · CON 6 → 18 (+6)<br>INT 8 → 1 (−3) · WIS 1 → 9 (+1)<br>HP: <strong style="color:#f0c060">98</strong> · Movement: <strong style="color:#f0c060">5</strong><br>+3 all attack &amp; defense rolls<br>Dice: <strong style="color:#f0c060">Elite (2d20)</strong> · Attacks: <strong style="color:#f0c060">2 + Solar Strike</strong></div>
+      </div>
+      <div>
+        <div class="dgold">Auto training + passive heal</div>
+        <div style="line-height:1.9">STR T1: carry → 250 lbs<br>STR T2: Rhitta proficiency, +3 dmg<br>CON T1: +2 to any Block roll<br>CON T2: +25 HP (in 98 total)<br>Swap: <strong style="color:#f0c060">Intimidate → STR (+8)</strong><br><strong style="color:#f0c060">Passive: +6 HP / turn (CON mod)</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="stitle">Day Form Abilities</div>
+    <div class="acard ag"><div class="aname">The One Above All <span class="atype">Signature Technique · Once per combat · Main Action</span></div><div class="adesc">Attack at +5 to hit (2d20 + STR +13 total). On hit: all dice maximum (10+10+10+3 = 33) + STR mod ×2 (+16) = <strong>49 guaranteed.</strong> Light element. Cannot be blocked — dodge only.</div></div>
+    <div class="acard ab"><div class="aname">Solar Strike <span class="atype">Ranged Projectile · Bonus Action · Once per turn</span></div><div class="adesc">Fire a bolt of sunlight. Range: 30ft (−3 beyond). Attack: <strong>2d20 + CHR (+1).</strong> Hit: <span class="df" style="font-size:10px">1d8 Fire</span><span class="dl" style="font-size:10px">1d8 Light</span>. Cannot use on activation turn — Bonus Action is spent activating.</div></div>
+    <div class="acard ag"><div class="aname">Total Defense <span class="atype">Level 9 equivalent · Main Action cost</span></div><div class="adesc">+5 to all Block and Dodge rolls until next turn. On margin 5+: free d6 counter. Cannot attack the turn Total Defense is used.</div></div>
+  </div>
+</div>
+
+<div class="fbar">
+  <strong>Night:</strong> d20 · 1 atk · d10 longsword · STR+0 · 25 HP · Weak: Shadow, Ice · 2 consumables · Pool +1/turn · Plead: floor(roll÷4)
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  <strong>Day:</strong> 2d20 · Bonus Action activate · 2 atk + Solar Strike · Rhitta 3d10+3 · STR 23 · 98 HP · +6 HP/turn · Weak: Water · 4 consumables · 5 turns · 3 cov/turn
+</div>
+
+</div>
+<script>
+// Plead slider
+document.getElementById('pslider').addEventListener('input', function(){
+  var b = parseInt(this.value);
+  document.getElementById('pval').textContent = '+' + b;
+  var a = Math.floor((10+b)/4), n = Math.floor((20+b)/4), t = Math.ceil(15/(a+1));
+  document.getElementById('savg').textContent = a;
+  document.getElementById('savgn').textContent = 'floor('+(10+b)+'÷4)';
+  document.getElementById('snat').textContent = n;
+  document.getElementById('snatn').textContent = 'floor('+(20+b)+'÷4)';
+  document.getElementById('strns').textContent = '~'+t;
+});
+
+function setColors(m) {
+  var r = document.documentElement.style;
+  if (m === 'day') {
+    r.setProperty('--nb',  '#1a0e00');
+    r.setProperty('--nc',  '#221200');
+    r.setProperty('--nbd', '#4a2a00');
+    r.setProperty('--nt',  '#f5dfa0');
+    r.setProperty('--ns',  '#a07030');
+    document.body.style.background = '#1a0e00';
+    document.body.style.color = '#f5dfa0';
+  } else {
+    r.setProperty('--nb',  '#0d0f1a');
+    r.setProperty('--nc',  '#13172a');
+    r.setProperty('--nbd', '#1e2440');
+    r.setProperty('--nt',  '#c8cfe8');
+    r.setProperty('--ns',  '#6070a8');
+    document.body.style.background = '#0d0f1a';
+    document.body.style.color = '#c8cfe8';
+  }
+}
+
+function setM(m) {
+  var nb = document.getElementById('nbtn');
+  var db = document.getElementById('dbtn');
+  var hpbar = document.getElementById('hpbar');
+  setColors(m);
+
+  if (m === 'day') {
+    // Toggle buttons
+    nb.classList.remove('on'); db.classList.add('on');
+
+    // Header
+    document.getElementById('tier').textContent = 'Elite · 2d20';
+    document.getElementById('tier').className = 'tier tier-d';
+    document.getElementById('mv').textContent = '5';
+
+    // Banner
+    document.getElementById('ban').className = 'ban ban-d';
+    document.getElementById('ban').innerHTML = '<strong>Day Form — Ra\'s Wrath.</strong><br>Bonus Action activate · Elite (2d20) · 2 attacks/turn + Solar Strike next turn · Rhitta conjured · STR 23 · 98 HP · <strong>+6 HP/turn passive</strong> · Resist: Fire, Light · Weak: Water · Intimidate → STR (+8) · 3 Covenant/turn · 5 turns max · auto-shuts at 0.';
+
+    // Attributes
+    document.getElementById('aSTR').innerHTML = '23 <span class="am">(+8)</span>';
+    document.getElementById('aCON').innerHTML = '18 <span class="am">(+6)</span>';
+    document.getElementById('aINT').innerHTML = '1 <span class="am">(−3)</span>';
+    document.getElementById('aWIS').innerHTML = '9 <span class="am">(+1)</span>';
+    document.getElementById('intlbl').textContent = 'Intelligence ↓';
+    document.getElementById('wislbl').textContent = 'Wisdom ↑';
+
+    // HP — use literal hex, not CSS variable
+    document.getElementById('hpv').textContent = '98';
+    hpbar.style.width = '100%';
+    hpbar.style.background = '#5a9922';
+    document.getElementById('hpn').textContent = 'L10 equiv · CON T2 incl · +6 HP/turn';
+
+    // Covenant
+    document.getElementById('cvv').textContent = '15 → draining';
+    document.getElementById('cvn').textContent = '3/turn · 5 turns max · cannot stop';
+
+    // Consumables
+    document.getElementById('hcap').textContent = '4 / 4'; document.getElementById('hcn').textContent = 'CON 18 → 4';
+    document.getElementById('acap').textContent = '4 / 4'; document.getElementById('acn').textContent = 'CON 18 → 4';
+    document.getElementById('rcap').textContent = '4 / 4'; document.getElementById('rcn').textContent = 'CON 18 → 4';
+
+    // Weapon
+    document.getElementById('wlbl').textContent = 'Day Weapon — Rhitta';
+    document.getElementById('wname').textContent = 'Rhitta — Exalted War Axe';
+    document.getElementById('wdetail').innerHTML = '<span class="dp">1d10 Phys</span><span class="df">1d10 Fire</span><span class="dl">1d10 Light</span>+3 prof · 2H · Reach';
+    document.getElementById('atk').textContent = '2/turn + Solar Strike (Bonus, turn 2+)';
+
+    // Skills
+    document.getElementById('s1').textContent = '+11'; document.getElementById('s1b').textContent = 'mod+8, boost+3';
+    document.getElementById('s2').textContent = '+3';  document.getElementById('s2b').textContent = 'WIS day mod+1, boost+2';
+    document.getElementById('hswap').textContent = '→ WIS'; document.getElementById('hswap').className = 'bdg bd';
+    document.getElementById('s5').textContent = '+8';  document.getElementById('s5b').textContent = 'STR mod+8';
+    document.getElementById('iswap').textContent = '→ STR'; document.getElementById('iswap').className = 'bdg bd';
+    document.getElementById('s7').textContent = '−2';  document.getElementById('s7b').textContent = 'INT day mod−3, boost+1';
+    document.getElementById('s8').textContent = '+2';  document.getElementById('s8b').textContent = 'WIS day mod+1, boost+1';
+    document.getElementById('s9').textContent = '−3';  document.getElementById('s9b').textContent = 'INT day mod−3';
+    document.getElementById('sfort').textContent = '+6';  document.getElementById('sfortb').textContent = 'CON day mod+6';
+    document.getElementById('snat2').textContent = '+1';  document.getElementById('snatb').textContent = 'WIS day mod+1';
+    document.getElementById('snen').textContent = '+1';   document.getElementById('snenb').textContent = 'WIS day mod+1';
+    document.getElementById('sride').textContent = '−3';  document.getElementById('srideb').textContent = 'INT day mod−3';
+    document.getElementById('stech').textContent = '−3';  document.getElementById('stechb').textContent = 'INT day mod−3';
+
+    // Res/Weak swap
+    document.getElementById('res-night').style.display = 'none';
+    document.getElementById('res-day').style.display = 'block';
+
+    // Resources
+    document.getElementById('cw').textContent = '250 lbs (STR T1)';
+    document.getElementById('stt').textContent = 'ACTIVE'; document.getElementById('stt').style.color = '#c8922a';
+    document.getElementById('ctt').textContent = 'ACTIVE'; document.getElementById('ctt').style.color = '#c8922a';
+
+    // Swap note
+    document.getElementById('swapnote').innerHTML = 'Active swap: <strong>Intimidate → STR.</strong> &nbsp;No calculation — only wrath. &nbsp;·&nbsp; INT drops to 1 and WIS rises to 9 — instinct overrides analysis.';
+
+    // Section visibility — direct style, no CSS cascade needed
+    document.getElementById('plead-section').style.display = 'none';
+    document.getElementById('day-section').style.display = 'block';
+
+  } else {
+    // Toggle buttons
+    db.classList.remove('on'); nb.classList.add('on');
+
+    // Header
+    document.getElementById('tier').textContent = 'Standard · d20';
+    document.getElementById('tier').className = 'tier tier-n';
+    document.getElementById('mv').textContent = '3';
+
+    // Banner
+    document.getElementById('ban').className = 'ban ban-n';
+    document.getElementById('ban').innerHTML = '<strong>Night Form — Ra has been silent since birth.</strong><br>Standard (d20) · 1 attack/turn · Iron Longsword · Weak: Shadow, Ice · Skill swap: Heal → INT · Pool +1/turn · Plead to Ra (Bonus Action) scales with Perform investment.';
+
+    // Attributes
+    document.getElementById('aSTR').innerHTML = '7 <span class="am">(+0)</span>';
+    document.getElementById('aCON').innerHTML = '6 <span class="am">(+0)</span>';
+    document.getElementById('aINT').innerHTML = '8 <span class="am">(+1)</span>';
+    document.getElementById('aWIS').innerHTML = '1 <span class="am">(−3)</span>';
+    document.getElementById('intlbl').textContent = 'Intelligence';
+    document.getElementById('wislbl').textContent = 'Wisdom';
+
+    // HP — use literal hex
+    document.getElementById('hpv').textContent = '25';
+    hpbar.style.width = '26%';
+    hpbar.style.background = '#3a6aa8';
+    document.getElementById('hpn').textContent = 'Base 25 (CON +0)';
+
+    // Covenant
+    document.getElementById('cvv').textContent = '15 / 15';
+    document.getElementById('cvn').textContent = '+1/turn · 15 turns to refill';
+
+    // Consumables
+    document.getElementById('hcap').textContent = '2 / 2'; document.getElementById('hcn').textContent = 'CON 6 → 2';
+    document.getElementById('acap').textContent = '2 / 2'; document.getElementById('acn').textContent = 'CON 6 → 2';
+    document.getElementById('rcap').textContent = '2 / 2'; document.getElementById('rcn').textContent = 'CON 6 → 2';
+
+    // Weapon
+    document.getElementById('wlbl').textContent = 'Night Weapon';
+    document.getElementById('wname').textContent = 'Iron Longsword';
+    document.getElementById('wdetail').textContent = 'd10 Physical · Melee · 1H · Attack: d20 + STR (+0)';
+    document.getElementById('atk').textContent = '1 per Main Action';
+
+    // Skills
+    document.getElementById('s1').textContent = '+3'; document.getElementById('s1b').textContent = 'mod+0, boost+3';
+    document.getElementById('s2').textContent = '+3'; document.getElementById('s2b').textContent = 'mod+1, boost+2';
+    document.getElementById('hswap').textContent = '→ INT'; document.getElementById('hswap').className = 'bdg bi';
+    document.getElementById('s5').textContent = '+1'; document.getElementById('s5b').textContent = 'mod+1';
+    document.getElementById('iswap').textContent = 'CHR'; document.getElementById('iswap').className = 'bdg bn';
+    document.getElementById('s7').textContent = '+2'; document.getElementById('s7b').textContent = 'mod+1, boost+1';
+    document.getElementById('s8').textContent = '−2'; document.getElementById('s8b').textContent = 'mod−3, boost+1';
+    document.getElementById('s9').textContent = '+1'; document.getElementById('s9b').textContent = 'mod+1';
+    document.getElementById('sfort').textContent = '+0';  document.getElementById('sfortb').textContent = 'mod+0';
+    document.getElementById('snat2').textContent = '−3';  document.getElementById('snatb').textContent = 'mod−3';
+    document.getElementById('snen').textContent = '−3';   document.getElementById('snenb').textContent = 'mod−3';
+    document.getElementById('sride').textContent = '+1';  document.getElementById('srideb').textContent = 'mod+1';
+    document.getElementById('stech').textContent = '+1';  document.getElementById('stechb').textContent = 'mod+1';
+
+    // Res/Weak swap
+    document.getElementById('res-night').style.display = 'block';
+    document.getElementById('res-day').style.display = 'none';
+
+    // Resources
+    document.getElementById('cw').textContent = '70 lbs (STR 7)';
+    document.getElementById('stt').textContent = 'Inactive'; document.getElementById('stt').style.color = '';
+    document.getElementById('ctt').textContent = 'Inactive'; document.getElementById('ctt').style.color = '';
+
+    // Swap note
+    document.getElementById('swapnote').innerHTML = 'Active swap: <strong>Heal → INT.</strong> &nbsp;Treats wounds like an equation, not instinct. &nbsp;·&nbsp; INT and WIS invert in day form — instinct replaces analysis.';
+
+    // Section visibility
+    document.getElementById('plead-section').style.display = 'block';
+    document.getElementById('day-section').style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>
