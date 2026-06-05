@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Jaren Ward — Earth 9</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap');
+:root{
+  --acc:#1e82ff;--acc-d:#0a5abf;--acc-l:#a8d0ff;--acc-bg:#edf5ff;
+  --ink:#090f1e;--ink2:#182d4e;--ink3:#5a748a;
+  --warm:#c8dff0;--border:#90b8d8;--paper:#f2f7fc;
+  --neg:#c0392b;--pos:#27ae60;
+  --arc:#00d0ff;--arc-d:#007fa8;--arc-bg:#e6faff;
+  --gold:#e8a020;--gold-l:#fff2d0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Jost',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;}
+.bg{position:fixed;inset:0;z-index:0;background:
+  radial-gradient(ellipse 70% 50% at 10% 0%,rgba(30,130,255,.12),transparent 55%),
+  radial-gradient(ellipse 50% 60% at 92% 95%,rgba(0,208,255,.10),transparent 55%),
+  var(--paper);}
+.page{max-width:960px;margin:0 auto;padding:36px 22px 80px;position:relative;z-index:1;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes arcPulse{0%{box-shadow:0 0 6px rgba(0,208,255,.3)}100%{box-shadow:0 0 16px rgba(0,208,255,.7)}}
+@keyframes detPulse{0%{box-shadow:0 0 4px rgba(232,160,32,.4)}100%{box-shadow:0 0 12px rgba(232,160,32,.9)}}
+
+/* SECTIONS */
+.sec{background:white;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:12px;box-shadow:0 1px 4px rgba(9,15,30,.08);}
+.sec-h{background:var(--ink);color:var(--acc-l);font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;padding:6px 13px;display:flex;align-items:center;justify-content:space-between;}
+.sec-b{padding:11px 13px;}
+
+/* HEADER */
+.hdr{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:end;padding-bottom:16px;border-bottom:1.5px solid var(--acc);margin-bottom:20px;animation:fadeUp .4s ease both;}
+.hdr-icon{width:68px;height:84px;border-radius:6px;border:1.5px solid var(--arc);background:linear-gradient(135deg,#050e20,#0a1e40);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 0 20px rgba(0,208,255,.2);}
+.char-lbl{font-size:9px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--acc);display:block;margin-bottom:4px;}
+.char-name{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,4.5vw,40px);font-weight:300;line-height:1;}
+.holly{font-size:.42em;font-weight:400;color:var(--ink3);font-family:'Jost',sans-serif;letter-spacing:.05em;margin-left:8px;vertical-align:middle;}
+.hdr-meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.pill{background:var(--ink);color:var(--acc-l);font-size:11px;font-weight:500;letter-spacing:.1em;padding:5px 12px;border-radius:2px;}
+.meta-sub{font-size:11px;color:var(--ink3);}
+
+/* VITALS */
+.vgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;animation:fadeUp .4s .04s ease both;}
+.vbox{background:white;border:1px solid var(--border);border-radius:6px;padding:8px 10px;text-align:center;box-shadow:0 1px 3px rgba(9,15,30,.06);position:relative;}
+.vmax-row{font-size:9px;color:var(--ink3);display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:2px;}
+.vedit{background:none;border:none;cursor:pointer;color:var(--border);font-size:10px;padding:0;line-height:1;}
+.vedit:hover{color:var(--acc);}
+.vval{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;line-height:1;}
+.vval.low{color:var(--neg);}
+.vval.mid{color:#e65100;}
+.vbar{height:4px;background:var(--warm);border-radius:2px;overflow:hidden;margin:4px 0 5px;}
+.vbar-fill{height:100%;border-radius:2px;transition:width .3s,background .3s;}
+.vctrls{display:flex;gap:2px;justify-content:center;}
+.vbtn{width:22px;height:18px;border:1px solid var(--border);border-radius:3px;background:white;font-size:10px;cursor:pointer;color:#888;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.vbtn:hover{border-color:var(--acc);color:var(--acc);}
+.vbtn.wide{width:30px;}
+.vlbl{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-top:4px;}
+.sup-box{background:white;border:1px solid var(--border);border-radius:6px;padding:8px 10px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+.sup-lbl{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);}
+.sup-ctrl{display:flex;align-items:center;gap:5px;}
+.sup-btn{width:24px;height:24px;border:1.5px solid var(--border);border-radius:4px;background:white;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#888;}
+.sup-btn:hover{border-color:var(--acc);color:var(--acc);}
+.sup-disp{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;min-width:40px;text-align:center;}
+.sup-max{font-size:9px;color:var(--ink3);}
+
+/* ARMOR TOGGLE inside vital box */
+.arm-toggle{display:flex;gap:4px;margin-bottom:4px;}
+.arm-tab{flex:1;border:1px solid var(--border);border-radius:4px;background:white;padding:3px 4px;cursor:pointer;font-size:9px;font-weight:600;text-align:center;transition:all .12s;line-height:1.3;color:var(--ink3);}
+.arm-tab.on{background:var(--acc-bg);border-color:var(--acc);color:var(--acc-d);}
+.arm-tab:hover:not(.on){border-color:var(--ink3);}
+
+/* RESOURCES */
+.res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;animation:fadeUp .4s .07s ease both;}
+.res-card{background:white;border:1px solid var(--border);border-radius:6px;padding:10px 12px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.res-title{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
+.pips{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;}
+.pip{width:21px;height:21px;border-radius:50%;border:1.5px solid var(--border);background:white;cursor:pointer;transition:all .12s;}
+.pip.on{background:var(--acc);border-color:var(--acc);}
+.pip:hover{border-color:var(--acc);}
+.res-cnt{font-size:11px;color:var(--ink3);text-align:center;margin-top:4px;}
+/* Super Charge */
+.super-card{background:linear-gradient(135deg,#fff8e6,var(--gold-l));border:1.5px solid var(--gold);border-radius:6px;padding:10px 12px;box-shadow:0 1px 6px rgba(232,160,32,.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+.super-pip{width:30px;height:30px;border-radius:50%;border:2px solid var(--gold);background:white;cursor:pointer;transition:all .15s;margin:0 auto;}
+.super-pip.on{background:var(--gold);border-color:#b07010;box-shadow:0 0 10px rgba(232,160,32,.5);}
+.super-pip:hover{border-color:#b07010;}
+
+/* CHARGE STATE */
+.charge-sec{background:linear-gradient(135deg,#e4f2ff,#d8eeff);border:1.5px solid var(--arc);border-radius:8px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,208,255,.14);animation:fadeUp .4s .09s ease both;}
+.charge-hdr{background:linear-gradient(90deg,#070f1c,#0d2040);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;}
+.charge-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--arc);}
+.charge-tag{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--acc-l);background:rgba(0,0,0,.3);padding:2px 7px;border-radius:2px;}
+.charge-body{padding:12px 14px;}
+.charge-bar-wrap{background:rgba(0,0,0,.08);border-radius:8px;height:26px;overflow:hidden;margin-bottom:8px;border:1px solid rgba(0,208,255,.3);position:relative;}
+.charge-bar-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#0060d0,#00d0ff);transition:width .35s cubic-bezier(.2,1,.3,1);box-shadow:0 0 12px rgba(0,208,255,.45);position:relative;}
+.charge-bar-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:22px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35));}
+.charge-val{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:700;color:var(--ink);pointer-events:none;z-index:1;white-space:nowrap;}
+.charge-ctrls{display:flex;gap:4px;align-items:center;justify-content:center;margin-bottom:10px;flex-wrap:wrap;}
+.ch-btn{border:1px solid var(--border);border-radius:3px;background:white;font-size:10px;cursor:pointer;color:#888;height:22px;min-width:32px;padding:0 6px;transition:all .12s;}
+.ch-btn:hover{border-color:var(--arc);color:var(--arc-d);}
+.ch-btn.full{background:var(--ink);color:var(--arc);border-color:var(--ink);font-size:9px;letter-spacing:.05em;}
+.ch-btn.full:hover{background:var(--ink2);}
+.abl-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.abl-btn{border:1px solid var(--arc);border-radius:5px;background:white;cursor:pointer;padding:7px 4px;text-align:center;transition:all .14s;position:relative;overflow:hidden;}
+.abl-btn:hover{background:var(--arc-bg);border-color:var(--arc-d);}
+.abl-btn.dim{opacity:.38;cursor:not-allowed;border-color:var(--border);}
+.abl-btn.dim:hover{background:white;}
+.ab-name{font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin-bottom:2px;line-height:1.2;}
+.ab-cost{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--arc-d);line-height:1;}
+.ab-sub{font-size:8px;color:var(--ink3);margin-top:2px;}
+
+/* STATUS + CARRY */
+.mid-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;animation:fadeUp .4s .11s ease both;}
+.status-box{background:white;border:1px solid var(--border);border-radius:6px;padding:10px 13px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.status-head{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.add-btn{background:none;border:1px solid var(--border);color:var(--ink3);border-radius:3px;font-size:10px;cursor:pointer;padding:1px 7px;transition:all .12s;}
+.add-btn:hover{border-color:var(--acc);color:var(--acc);}
+.status-chip{display:inline-flex;align-items:center;gap:5px;background:#f0f5ff;border:1px solid var(--warm);border-radius:12px;padding:3px 8px;margin:2px;font-size:11.5px;font-weight:500;}
+.status-chip .stc-t{background:var(--acc-l);color:var(--acc-d);border-radius:8px;font-size:9px;font-weight:700;padding:1px 5px;}
+.status-chip button{background:none;border:none;cursor:pointer;color:#bbb;font-size:11px;padding:0;line-height:1;}
+.status-chip button:hover{color:var(--neg);}
+.carry-box{background:white;border:1px solid var(--border);border-radius:6px;padding:10px 13px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.carry-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.carry-ttl{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);}
+.carry-nums{font-size:12px;font-weight:600;}
+.carry-bg{height:7px;background:var(--warm);border-radius:4px;overflow:hidden;}
+.carry-fill{height:100%;border-radius:4px;transition:width .3s,background .3s;}
+.carry-note{font-size:10px;margin-top:4px;color:var(--ink3);}
+
+/* BODY GRID */
+.body-grid{display:grid;grid-template-columns:252px 1fr;gap:12px;animation:fadeUp .4s .13s ease both;}
+
+/* ATTRIBUTES */
+.attr-row{display:flex;align-items:center;padding:6px 0;border-bottom:1px solid var(--warm);}
+.attr-row:last-child{border-bottom:none;}
+.aname{font-size:12px;font-weight:500;color:var(--ink2);flex:1;}
+.attr-in{width:42px;border:1.5px solid var(--border);border-radius:4px;padding:2px 5px;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;text-align:center;background:white;color:var(--ink);outline:none;transition:border-color .12s;}
+.attr-in:focus{border-color:var(--acc);}
+.amod{font-size:12px;font-weight:600;border-radius:3px;padding:2px 5px;min-width:36px;text-align:center;}
+.amod.pos{color:var(--acc-d);background:var(--acc-l);}
+.amod.zero{color:#888;background:#eee;}
+.amod.neg{color:var(--neg);background:#f5e8e8;}
+
+/* TRAINING */
+.tr-row{display:flex;align-items:center;padding:5px 0;border-bottom:1px solid var(--warm);}
+.tr-row:last-child{border-bottom:none;}
+.tr-name{font-size:10.5px;font-weight:500;color:var(--ink2);width:82px;flex-shrink:0;display:flex;align-items:center;gap:4px;}
+.tr-tier{font-size:8px;color:#aaa;font-weight:400;}
+.tr-pips{display:flex;gap:3px;flex-wrap:wrap;}
+.tp{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--border);background:white;cursor:pointer;transition:all .12s;flex-shrink:0;position:relative;}
+.tp:hover{border-color:var(--acc-d);transform:scale(1.3);}
+.tp.on{background:var(--acc);border-color:var(--acc);}
+.tp.gate{border-style:dashed;border-color:#bbb;}
+.tp.gate.on{background:var(--acc-d);border-color:var(--acc-d);border-style:solid;}
+
+/* TOOLTIP */
+#tip{position:fixed;z-index:9999;background:var(--ink);color:#f0ebe3;border-radius:7px;padding:10px 13px;max-width:260px;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.45);display:none;line-height:1;}
+#tip .tt{font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--acc-l);margin-bottom:3px;}
+#tip .th{font-size:12px;font-weight:600;color:white;margin-bottom:4px;line-height:1.3;}
+#tip .td{font-size:11px;line-height:1.55;color:#c8c0b5;}
+#tip .tg{font-size:9px;color:var(--arc);margin-top:5px;font-style:italic;}
+
+/* MODAL */
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.22);z-index:9996;display:none;}
+#modal{position:fixed;z-index:9997;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border:2px solid var(--acc);border-radius:10px;padding:20px 22px;width:330px;max-width:92vw;box-shadow:0 8px 40px rgba(0,0,0,.25);display:none;max-height:80vh;overflow-y:auto;}
+#modal .mh{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+#modal .mp{font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.5;}
+.mopt{display:flex;align-items:flex-start;gap:8px;padding:7px 9px;border:1px solid var(--border);border-radius:5px;cursor:pointer;margin-bottom:5px;transition:all .12s;}
+.mopt:hover,.mopt.sel{border-color:var(--acc);background:var(--acc-bg);}
+.mopt input[type=radio]{accent-color:var(--acc);margin-top:2px;flex-shrink:0;}
+.mopt-l{font-size:12.5px;font-weight:500;}
+.mopt-d{font-size:10.5px;color:var(--ink3);margin-top:2px;line-height:1.4;}
+.mtext{width:100%;border:1.5px solid var(--border);border-radius:4px;padding:8px 10px;font-family:'Jost',sans-serif;font-size:12.5px;color:var(--ink);outline:none;margin-bottom:8px;}
+.mtext:focus{border-color:var(--acc);}
+.mbtns{display:flex;gap:8px;justify-content:flex-end;}
+.mcancel{border:1px solid var(--border);background:white;color:#888;border-radius:4px;padding:6px 13px;font-size:12px;cursor:pointer;}
+.msave{background:var(--acc);color:white;border:none;border-radius:4px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;}
+
+/* TRAINING CHOICES PANEL */
+#tc-panel{background:var(--acc-bg);border:1px solid var(--acc-l);border-radius:6px;padding:10px 13px;margin-top:10px;display:none;}
+#tc-panel .tch{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--acc-d);margin-bottom:7px;}
+.tc-item{display:flex;align-items:baseline;gap:5px;padding:3px 0;font-size:11.5px;border-bottom:1px solid var(--acc-l);}
+.tc-item:last-child{border-bottom:none;}
+.tc-k{color:var(--ink2);font-weight:500;flex-shrink:0;}
+.tc-v{color:var(--acc-d);font-weight:600;}
+.tc-x{font-size:10px;color:var(--neg);cursor:pointer;border:none;background:none;margin-left:auto;opacity:.6;}
+.tc-x:hover{opacity:1;}
+
+/* SKILLS */
+.skill-tbl{width:100%;border-collapse:collapse;}
+.skill-tbl td{padding:4px 3px;border-bottom:1px solid var(--warm);font-size:11.5px;vertical-align:middle;}
+.skill-tbl tr:last-child td{border-bottom:none;}
+.sk{color:var(--ink2);}
+.sk.hi{font-weight:500;color:var(--ink);}
+.badge{font-size:8.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 5px;border-radius:2px;white-space:nowrap;}
+.chr-b{color:var(--acc-d);background:var(--acc-l);}
+.wis-b{color:#4a6a3a;background:#eaf2e8;}
+.con-b{color:#3a5a6a;background:#e8f0f5;}
+.dex-b{color:#5a4a7a;background:#f0ecfa;}
+.int-b{color:#6a4a3a;background:#f5ece8;}
+.str-b{color:#5a3a3a;background:#f5e8e8;}
+.swp-b{color:#7a5c3a;background:#f5ead8;}
+.b-base{font-weight:500;color:var(--ink2);font-size:11px;}
+.boost-in{width:28px;border:1px solid #c8d8ec;border-radius:3px;padding:1px 3px;font-size:10.5px;text-align:center;font-family:'Jost',sans-serif;color:var(--acc-d);background:#eaf2ff;outline:none;}
+.tier-chip{background:#e4f5e4;color:#3a7a3a;padding:1px 4px;border-radius:2px;font-weight:600;font-size:10px;}
+.stot{font-weight:600;font-size:12.5px;text-align:right;min-width:30px;}
+.stot.hi{color:var(--acc-d);}
+.stot.neg{color:var(--neg);}
+.sep{margin:0 2px;color:#ccc;font-size:9px;}
+
+/* WEAPONS */
+.wpn-card{background:var(--acc-bg);border:1px solid var(--acc-l);border-radius:6px;padding:10px 12px;margin-bottom:8px;position:relative;}
+.wpn-card:last-child{margin-bottom:0;}
+.wpn-card.arc-card{border-color:var(--arc);background:var(--arc-bg);}
+.wpn-card.gold-card{background:linear-gradient(135deg,#fffbe8,var(--gold-l));border-color:var(--gold);display:none;}
+.wpn-card.knife-card{background:#faf6ff;border-color:#c8b0e8;}
+.wpn-head{display:flex;align-items:baseline;gap:7px;margin-bottom:4px;flex-wrap:wrap;}
+.wpn-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;}
+.wtag{font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:2px 6px;border-radius:2px;border:1px solid;}
+.wtag-arc{background:rgba(0,208,255,.1);color:var(--arc-d);border-color:var(--arc);}
+.wtag-gold{background:#fff0c8;color:#907020;border-color:#d4a020;}
+.wtag-mal{background:#f8ece8;color:#7a3020;border-color:#d4a090;}
+.wtag-knife{background:#f0ecfc;color:#6050a0;border-color:#b8a8e0;}
+.wtag-intr{font-size:7.5px;background:rgba(0,208,255,.06);color:var(--arc-d);border-color:rgba(0,208,255,.3);}
+.wpn-stat{font-size:11.5px;color:var(--ink2);margin-bottom:2px;}
+.wpn-note{font-size:10.5px;color:var(--ink3);line-height:1.55;margin-top:3px;}
+.mode-toggle{position:absolute;top:8px;right:10px;display:flex;gap:4px;}
+.mode-btn{background:none;border:1px solid var(--border);border-radius:3px;font-size:9px;cursor:pointer;color:var(--ink3);padding:2px 7px;transition:all .12s;}
+.mode-btn:hover{border-color:var(--arc);color:var(--arc-d);}
+.mode-btn.on{background:var(--arc);color:white;border-color:var(--arc);}
+/* Ammo row */
+.ammo-row{display:flex;align-items:center;gap:5px;margin-top:7px;}
+.ammo-lbl{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);}
+.ammo-val{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--acc-d);min-width:44px;text-align:center;}
+.ammo-btn{width:20px;height:20px;border:1px solid var(--border);border-radius:3px;background:white;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#888;transition:all .12s;}
+.ammo-btn:hover{border-color:var(--acc);color:var(--acc);}
+/* Malfeasance hit counter */
+.mhit-row{display:flex;align-items:center;gap:5px;margin-top:5px;}
+.mhit-lbl{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);}
+.mhit-pip{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--border);background:white;cursor:pointer;transition:all .12s;}
+.mhit-pip.on{background:var(--neg);border-color:#8a1a1a;}
+.mhit-pip.det{background:var(--gold);border-color:#a07010;animation:detPulse .5s infinite alternate;}
+.det-btn{margin-left:6px;background:var(--neg);color:white;border:none;border-radius:3px;font-size:9px;font-weight:700;padding:2px 8px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;opacity:0;transition:opacity .2s;}
+.det-btn.show{opacity:1;}
+.mhit-reset{margin-left:3px;background:none;border:1px solid var(--border);border-radius:3px;font-size:9px;cursor:pointer;padding:2px 6px;color:var(--ink3);transition:all .12s;}
+.mhit-reset:hover{border-color:var(--acc);color:var(--acc);}
+
+/* PERKS */
+.perk-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--warm);}
+.perk-item:last-child{border-bottom:none;}
+.perk-tog{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--border);background:white;cursor:pointer;flex-shrink:0;margin-top:2px;transition:all .12s;}
+.perk-tog.on{background:var(--acc);border-color:var(--acc);}
+.perk-name{font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.perk-desc{font-size:11px;color:var(--ink3);line-height:1.55;}
+
+/* MONEY + INVENTORY */
+.money-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.money-lbl{font-size:11.5px;font-weight:500;color:var(--ink2);width:55px;flex-shrink:0;}
+.money-disp{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--acc-d);}
+.money-btns{display:flex;gap:3px;margin-left:auto;}
+.money-btn{width:24px;height:20px;border:1px solid var(--border);border-radius:3px;background:white;font-size:10px;cursor:pointer;color:#888;transition:all .12s;}
+.money-btn:hover{border-color:var(--acc);color:var(--acc);}
+.inv-item{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:start;padding:5px 0;border-bottom:1px solid var(--warm);}
+.inv-item:last-of-type{border-bottom:none;}
+.inv-name{font-size:12px;font-weight:500;}
+.inv-desc{font-size:10.5px;color:#888;margin-top:1px;line-height:1.45;}
+.inv-w{font-size:11px;color:#888;white-space:nowrap;padding-top:1px;}
+.inv-del{font-size:10px;color:var(--neg);cursor:pointer;border:none;background:none;opacity:.55;}
+.inv-del:hover{opacity:1;}
+.inv-in{border:1px solid var(--border);border-radius:4px;padding:5px 7px;font-family:'Jost',sans-serif;font-size:11.5px;color:var(--ink);background:white;outline:none;width:100%;transition:border-color .12s;}
+.inv-in:focus{border-color:var(--acc);}
+.inv-add-btn{background:var(--ink);color:var(--acc-l);border:none;border-radius:4px;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;cursor:pointer;padding:5px 9px;white-space:nowrap;}
+.add-grid{display:grid;grid-template-columns:2fr 1fr;gap:5px;margin-top:7px;padding-top:7px;border-top:1px dashed var(--border);}
+.add-row{grid-column:1/-1;display:grid;grid-template-columns:2fr auto;gap:5px;}
+
+/* RESISTANCES */
+.r-chip{background:#e4f5e4;color:#2e6a2e;font-size:11px;font-weight:500;padding:3px 9px;border-radius:12px;display:inline-flex;align-items:center;gap:4px;}
+.w-chip{background:#f5e4e4;color:#8a2e2e;font-size:11px;font-weight:500;padding:3px 9px;border-radius:12px;display:inline-flex;align-items:center;gap:4px;}
+.chip-x{background:none;border:none;cursor:pointer;font-size:9px;opacity:.6;padding:0;line-height:1;}
+.chip-x:hover{opacity:1;}
+
+/* QUEST ITEMS */
+.qi-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--warm);}
+.qi-item:last-child{border-bottom:none;}
+.qi-ico{font-size:14px;flex-shrink:0;}
+.qi-name{font-size:12px;font-weight:500;color:var(--ink);flex:1;}
+.qi-note{font-size:10px;color:var(--ink3);}
+
+/* VEHICLE */
+.vehicle-card{background:linear-gradient(135deg,#eef8e6,#e2f4d0);border:1.5px solid #7aba40;border-radius:6px;padding:10px 12px;margin-bottom:10px;}
+.v-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:#3a6020;margin-bottom:3px;}
+.v-stat{font-size:11px;color:#4a7030;margin-bottom:1px;}
+.sparrow-bar-wrap{height:5px;background:rgba(0,0,0,.1);border-radius:3px;overflow:hidden;margin:5px 0;}
+.sparrow-bar-fill{height:100%;background:linear-gradient(90deg,#4caf50,#8bc34a);border-radius:3px;transition:width .3s;}
+.v-ctrl{display:flex;gap:4px;margin-top:6px;}
+.v-btn{height:20px;min-width:26px;border:1px solid #7aba40;border-radius:3px;background:white;font-size:10px;cursor:pointer;color:#4a7030;transition:all .12s;display:flex;align-items:center;justify-content:center;}
+.v-btn:hover{background:#eef8e6;}
+.v-note{font-size:9px;color:#5a8040;margin-top:4px;line-height:1.5;}
+
+/* LANGUAGES */
+.lang-wrap{display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
+.lang-chip{background:var(--acc-l);color:var(--acc-d);border-radius:10px;padding:2px 9px;font-size:11px;font-weight:500;display:flex;align-items:center;gap:4px;}
+.lang-chip button{background:none;border:none;cursor:pointer;color:var(--acc-d);font-size:10px;padding:0;opacity:.6;}
+.lang-chip button:hover{opacity:1;}
+.lang-add{background:none;border:1px dashed var(--border);color:var(--ink3);border-radius:10px;padding:2px 9px;font-size:11px;cursor:pointer;transition:all .12s;}
+.lang-add:hover{border-color:var(--acc);color:var(--acc);}
+
+/* COMPANIONS */
+.comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.comp-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;margin-bottom:2px;}
+.comp-role{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc-d);margin-bottom:5px;}
+.comp-desc{font-size:11px;line-height:1.6;color:#555;}
+
+/* SAVE/LOAD BAR */
+.save-bar{display:flex;gap:8px;margin-bottom:12px;animation:fadeUp .4s .18s ease both;}
+.save-btn{flex:1;border:1px solid var(--border);background:white;color:var(--ink2);border-radius:5px;padding:8px;font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;transition:all .12s;}
+.save-btn:hover{border-color:var(--acc);color:var(--acc);}
+
+@media(max-width:680px){
+  .body-grid{grid-template-columns:1fr;}
+  .vgrid{grid-template-columns:repeat(3,1fr);}
+  .abl-grid{grid-template-columns:repeat(3,1fr);}
+  .comp-grid{grid-template-columns:1fr;}
+  .res-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div id="tip"><div class="tt" id="tip-t"></div><div class="th" id="tip-h"></div><div class="td" id="tip-d"></div><div class="tg" id="tip-g"></div></div>
+<div id="overlay" onclick="closeModal()"></div>
+<div id="modal">
+  <div class="mh" id="m-head"></div>
+  <div class="mp" id="m-para"></div>
+  <div id="m-opts"></div>
+  <div class="mbtns"><button class="mcancel" onclick="closeModal()">Cancel</button><button class="msave" onclick="saveModal()">Save</button></div>
+</div>
+<div class="page">
+
+<!-- SAVE / LOAD -->
+<div class="save-bar">
+  <button class="save-btn" onclick="saveState()">💾 Save State</button>
+  <button class="save-btn" onclick="loadState()">📂 Load State</button>
+  <button class="save-btn" onclick="if(confirm('Reset all to defaults?'))location.reload();" style="color:var(--neg);">↺ Reset</button>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <img src="data:image/png;base64,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" style="width:68px;height:84px;object-fit:cover;object-position:top center;border-radius:6px;border:1.5px solid var(--arc);image-rendering:pixelated;background:#0a1828;">
+  <div>
+    <span class="char-lbl">Earth 9 · BroadNine · Standard Tier (d20) · 2 Attacks / Main Action</span>
+    <div class="char-name">Jaren Ward <span class="holly">· Altana Arc Fighter</span></div>
+  </div>
+  <div class="hdr-meta">
+    <div class="pill">Level 9</div>
+    <div class="meta-sub">Age 29 · Human</div>
+    <div class="meta-sub" style="color:var(--arc);font-weight:600;">→ Level 10 on arrival at Morgan</div>
+  </div>
+</div>
+
+<!-- VITALS -->
+<div class="vgrid">
+  <!-- HP -->
+  <div class="vbox">
+    <div class="vmax-row">MAX <span id="vmax-hp">65</span> <button class="vedit" onclick="editVMax('hp')" title="Edit max">✎</button></div>
+    <div class="vval" id="v-hp">65/65</div>
+    <div class="vbar"><div class="vbar-fill" id="vbar-hp" style="width:100%;background:#2e7d32;"></div></div>
+    <div class="vctrls">
+      <button class="vbtn" onclick="chgV('hp',-5)">−5</button>
+      <button class="vbtn" onclick="chgV('hp',-1)">−1</button>
+      <button class="vbtn" onclick="chgV('hp',1)">+1</button>
+      <button class="vbtn wide" onclick="resetV('hp')">↺</button>
+    </div>
+    <div class="vlbl">Hit Points</div>
+  </div>
+  <!-- ARMOR -->
+  <div class="vbox">
+    <div class="arm-toggle">
+      <button class="arm-tab on" id="arm-tech" onclick="setArmor('tech')">Tech<br><span style="font-size:8px;font-weight:400;color:inherit;">60HP +3mv</span></button>
+      <button class="arm-tab" id="arm-bella" onclick="setArmor('bella')">St. Bella<br><span style="font-size:8px;font-weight:400;color:inherit;">65HP +2mv</span></button>
+    </div>
+    <div class="vmax-row">MAX <span id="vmax-arm">60</span> <button class="vedit" onclick="editVMax('arm')">✎</button></div>
+    <div class="vval" id="v-arm">60/60</div>
+    <div class="vbar"><div class="vbar-fill" id="vbar-arm" style="width:100%;background:var(--acc);"></div></div>
+    <div class="vctrls">
+      <button class="vbtn" onclick="chgV('arm',-5)">−5</button>
+      <button class="vbtn" onclick="chgV('arm',-1)">−1</button>
+      <button class="vbtn" onclick="chgV('arm',1)">+1</button>
+      <button class="vbtn wide" onclick="resetV('arm')">↺</button>
+    </div>
+    <div class="vlbl">Armor HP</div>
+  </div>
+  <!-- MOVEMENT -->
+  <div class="vbox">
+    <div class="vmax-row">MAX <span id="vmax-mv">8</span> <button class="vedit" onclick="editVMax('mv')">✎</button></div>
+    <div class="vval" id="v-mv">8/8</div>
+    <div class="vbar"><div class="vbar-fill" id="vbar-mv" style="width:100%;background:#2e7d32;"></div></div>
+    <div class="vctrls">
+      <button class="vbtn" onclick="chgV('mv',-2)">−2</button>
+      <button class="vbtn" onclick="chgV('mv',-1)">−1</button>
+      <button class="vbtn" onclick="chgV('mv',1)">+1</button>
+      <button class="vbtn wide" onclick="resetV('mv')">↺</button>
+    </div>
+    <div class="vlbl">Movement <span style="font-size:8px;font-weight:400;">armor adds separately</span></div>
+  </div>
+  <!-- INITIATIVE -->
+  <div class="vbox" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
+    <div class="vval" id="v-init" style="font-size:20px;">d20+5</div>
+    <div class="vlbl">Initiative</div>
+    <div style="font-size:10px;color:var(--ink3);">DEX mod +5</div>
+  </div>
+  <!-- SUPPLIES -->
+  <div class="sup-box">
+    <div class="sup-lbl">Supplies</div>
+    <div class="sup-ctrl">
+      <button class="sup-btn" onclick="chgSup(-10)">−−</button>
+      <button class="sup-btn" onclick="chgSup(-1)">−</button>
+      <div><div class="sup-disp"><span id="sup-v">100</span></div><div class="sup-max">/ 100</div></div>
+      <button class="sup-btn" onclick="chgSup(1)">+</button>
+      <button class="sup-btn" onclick="chgSup(10)">++</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESOURCES -->
+<div class="res-grid" id="res-grid">
+  <div class="res-card">
+    <div class="res-title">Healing · Bonus Action <button class="vedit" onclick="editResMax('heal')" style="font-size:10px;">✎</button></div>
+    <div class="pips" id="heal-pips"></div><div class="res-cnt" id="heal-cnt">2 / 2</div>
+  </div>
+  <div class="res-card">
+    <div class="res-title">Repair Kits · Bonus Action <button class="vedit" onclick="editResMax('rep')" style="font-size:10px;">✎</button></div>
+    <div class="pips" id="rep-pips"></div><div class="res-cnt" id="rep-cnt">3 / 3</div>
+  </div>
+  <div class="res-card">
+    <div class="res-title">Adrenaline +3 · Bonus Action <button class="vedit" onclick="editResMax('adr')" style="font-size:10px;">✎</button></div>
+    <div class="pips" id="adr-pips"></div><div class="res-cnt" id="adr-cnt">2 / 2</div>
+  </div>
+  <div class="super-card" id="super-card">
+    <div class="sup-lbl" style="color:#a07010;font-size:8.5px;">⚡ Super Charge</div>
+    <div class="super-pip on" id="super-pip" onclick="useSuper()" title="Click to use: Full HP restore instantly"></div>
+    <div style="font-size:8.5px;color:#a07010;text-align:center;">Full Heal Instantly</div>
+    <div style="font-size:8px;color:#c09030;">One use — gone forever</div>
+  </div>
+</div>
+
+<!-- ARC CHARGE STATE -->
+<div class="charge-sec">
+  <div class="charge-hdr">
+    <div style="display:flex;flex-direction:column;gap:2px;"><div class="charge-title">⚡ Arc Charge State</div><div style="font-size:8px;color:var(--arc);opacity:.8;letter-spacing:.1em;text-transform:uppercase;">INT Specialization Path</div></div>
+    <div class="charge-tag">Tech Specialization · Arc Energy System</div>
+  </div>
+  <div class="charge-body">
+    <div class="charge-bar-wrap">
+      <div class="charge-bar-fill" id="charge-fill" style="width:100%;"></div>
+      <div class="charge-val" id="charge-val">150 / 150</div>
+    </div>
+    <div class="charge-ctrls">
+      <button class="ch-btn" onclick="chgCharge(-50)">−50</button>
+      <button class="ch-btn" onclick="chgCharge(-25)">−25</button>
+      <button class="ch-btn" onclick="chgCharge(-10)">−10</button>
+      <button class="ch-btn" onclick="chgCharge(-1)">−1</button>
+      <button class="ch-btn" onclick="chgCharge(1)">+1</button>
+      <button class="ch-btn" onclick="chgCharge(10)">+10</button>
+      <button class="ch-btn" onclick="chgCharge(25)">+25</button>
+      <button class="ch-btn" onclick="chgCharge(50)">+50</button>
+      <button class="ch-btn full" onclick="chgCharge(150)">↺ Full</button>
+    </div>
+    <div class="abl-grid">
+      <div class="abl-btn" id="abl-0" onclick="spendCharge(20,'Charged Attack (single)')">
+        <div class="ab-name">Charged<br>Attack</div>
+        <div class="ab-cost">20</div>
+        <div class="ab-sub">Single · +D8 Elec</div>
+      </div>
+      <div class="abl-btn" id="abl-1" onclick="spendCharge(35,'Arc Cleave')">
+        <div class="ab-name">Arc<br>Cleave</div>
+        <div class="ab-cost">35</div>
+        <div class="ab-sub">Multi-target</div>
+      </div>
+      <div class="abl-btn" id="abl-2" onclick="spendCharge(25,'Arc Defense')">
+        <div class="ab-name">Arc<br>Defense</div>
+        <div class="ab-cost">25</div>
+        <div class="ab-sub">Block/Dodge +4</div>
+      </div>
+      <div class="abl-btn" id="abl-3" onclick="spendCharge(30,'Arc Wave')">
+        <div class="ab-name">Arc<br>Wave</div>
+        <div class="ab-cost">30</div>
+        <div class="ab-sub">Pure Electric</div>
+      </div>
+      <div class="abl-btn" id="abl-4" onclick="spendCharge(50,'Golden Gun Mode')">
+        <div class="ab-name">Golden<br>Gun</div>
+        <div class="ab-cost">50</div>
+        <div class="ab-sub">+D10 Fire · Line</div>
+      </div>
+    </div>
+    <div style="margin-top:8px;padding-top:7px;border-top:1px solid rgba(0,208,255,.2);font-size:9.5px;color:var(--arc-d);line-height:1.6;">
+      <strong style="color:var(--ink2);">Tech Specialization (INT T4):</strong> Energy pool scales with INT mod · Charge is the Arc Energy Cell system · Golden Gun and all Arc abilities are Specialization outputs, not Nen
+    </div>
+  </div>
+</div>
+
+<!-- STATUS + CARRY -->
+<div class="mid-row">
+  <div class="status-box">
+    <div class="status-head"><span>Active Status Effects</span><button class="add-btn" onclick="addStatus()">+ Add</button></div>
+    <div id="status-list"><span style="font-size:11px;color:#bbb;font-style:italic;">None active</span></div>
+  </div>
+  <div class="carry-box">
+    <div class="carry-head"><span class="carry-ttl">Carry Weight</span><span class="carry-nums"><span id="carry-cur">—</span> / <span id="carry-max">120</span> lbs</span></div>
+    <div class="carry-bg"><div class="carry-fill" id="carry-fill-bar" style="width:5%;background:#2e7d32;"></div></div>
+    <div class="carry-note">40 lb floor · STR 12 × 10 = 120 lb cap</div>
+  </div>
+</div>
+
+<!-- BODY GRID -->
+<div class="body-grid">
+<!-- LEFT COLUMN -->
+<div>
+
+<!-- ATTRIBUTES -->
+<div class="sec">
+  <div class="sec-h">Attributes <span style="font-size:8px;font-weight:400;opacity:.6;text-transform:none;letter-spacing:.04em;">scores include training bonuses to attribute</span></div>
+  <div class="sec-b">
+    <div class="attr-row">
+      <div class="aname">Strength</div>
+      <input class="attr-in" id="a-str" type="number" value="12" min="1" max="60" oninput="recalc()">
+      <div class="amod pos" id="m-str">+3</div>
+    </div>
+    <div class="attr-row">
+      <div class="aname">Dexterity <span style="font-size:9px;color:var(--ink3);">(dodge)</span></div>
+      <input class="attr-in" id="a-dex" type="number" value="16" min="1" max="60" oninput="recalc()">
+      <div class="amod pos" id="m-dex">+5</div>
+    </div>
+    <div class="attr-row">
+      <div class="aname">Constitution <span style="font-size:9px;color:var(--ink3);">(block)</span></div>
+      <input class="attr-in" id="a-con" type="number" value="13" min="1" max="60" oninput="recalc()">
+      <div class="amod pos" id="m-con">+3</div>
+    </div>
+    <div class="attr-row">
+      <div class="aname">Intelligence</div>
+      <input class="attr-in" id="a-int" type="number" value="13" min="1" max="60" oninput="recalc()">
+      <div class="amod pos" id="m-int">+3</div>
+    </div>
+    <div class="attr-row">
+      <div class="aname">Wisdom</div>
+      <input class="attr-in" id="a-wis" type="number" value="6" min="1" max="60" oninput="recalc()">
+      <div class="amod zero" id="m-wis">+0</div>
+    </div>
+    <div class="attr-row">
+      <div class="aname">Charisma</div>
+      <input class="attr-in" id="a-chr" type="number" value="10" min="1" max="60" oninput="recalc()">
+      <div class="amod pos" id="m-chr">+2</div>
+    </div>
+  </div>
+</div>
+
+<!-- TRAINING -->
+<div class="sec">
+  <div class="sec-h">Attribute Training <span style="font-size:8px;font-weight:400;opacity:.7;letter-spacing:.04em;text-transform:none;">hover · click to toggle</span></div>
+  <div class="sec-b" id="training-rows"></div>
+</div>
+<div id="tc-panel"><div class="tch">Training Choices & Paths</div><div id="tc-items"></div></div>
+
+<!-- RESISTANCES -->
+<div class="sec" style="margin-top:12px;">
+  <div class="sec-h">Resistances &amp; Weaknesses</div>
+  <div class="sec-b">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4a8a4a;">Resistant</span>
+      <button class="add-btn" onclick="addResist()" style="color:var(--pos);">+ Add</button>
+    </div>
+    <div id="resist-list" style="display:flex;flex-wrap:wrap;gap:5px;min-height:22px;"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 5px;">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8a4a4a;">Weak</span>
+      <button class="add-btn" onclick="addWeak()" style="color:var(--neg);">+ Add</button>
+    </div>
+    <div id="weak-list" style="display:flex;flex-wrap:wrap;gap:5px;min-height:22px;"></div>
+    <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--warm);font-size:10px;color:var(--ink3);line-height:1.7;">
+      <span style="color:var(--ink2);font-weight:600;">DEX T1:</span> +2 to any Dodge roll &nbsp;|&nbsp;
+      <span style="color:var(--ink2);font-weight:600;">CON T1:</span> +2 to any Block roll<br>
+      <span style="color:var(--ink2);font-weight:600;">Dice Tier:</span> Standard (d20) · Upgrades to Elite (2d20) at Level 10
+    </div>
+  </div>
+</div>
+
+</div><!-- /left -->
+
+<!-- RIGHT COLUMN -->
+<div>
+
+<!-- SKILLS -->
+<div class="sec" style="margin-bottom:12px;">
+  <div class="sec-h">Skills <span style="font-size:8px;font-weight:400;opacity:.6;text-transform:none;letter-spacing:.04em;">base = attr mod · boost = manual · tier = training</span></div>
+  <div class="sec-b" style="padding:5px 10px;">
+    <table class="skill-tbl">
+      <tr><td><span class="badge dex-b">DEX</span></td><td><span class="sk hi">Acrobatics</span></td><td><span class="b-base" id="base-acrobatics">+5</span></td><td class="sep">+</td><td><input class="boost-in" id="b-acrobatics" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-acrobatics" class="tier-chip">+2</span></td><td>=</td><td><span class="stot hi" id="tot-acrobatics">+7</span></td></tr>
+      <tr><td><span class="badge str-b">STR</span></td><td><span class="sk hi">Athletics</span></td><td><span class="b-base" id="base-athletics">+3</span></td><td class="sep">+</td><td><input class="boost-in" id="b-athletics" value="2" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-athletics" style="font-size:10px;color:#bbb;">—</span></td><td>=</td><td><span class="stot hi" id="tot-athletics">+5</span></td></tr>
+      <tr><td><span class="badge int-b">INT</span></td><td><span class="sk hi">Awareness</span></td><td><span class="b-base" id="base-awareness">+2</span></td><td class="sep">+</td><td><input class="boost-in" id="b-awareness" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-awareness" class="tier-chip">+4</span></td><td>=</td><td><span class="stot hi" id="tot-awareness">+6</span></td></tr>
+      <tr><td><span class="badge int-b">INT</span></td><td><span class="sk hi">Engineering</span></td><td><span class="b-base" id="base-engineering">+2</span></td><td class="sep">+</td><td><input class="boost-in" id="b-engineering" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-engineering" class="tier-chip">+5</span></td><td>=</td><td><span class="stot hi" id="tot-engineering">+7</span></td></tr>
+      <tr><td><span class="badge con-b">CON</span></td><td><span class="sk">Fortitude</span></td><td><span class="b-base" id="base-fortitude">+4</span></td><td class="sep">+</td><td><input class="boost-in" id="b-fortitude" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-fortitude" class="tier-chip">+2</span></td><td>=</td><td><span class="stot hi" id="tot-fortitude">+6</span></td></tr>
+      <tr><td><span class="badge wis-b">WIS</span></td><td><span class="sk">Heal</span></td><td><span class="b-base" id="base-heal">+0</span></td><td class="sep">+</td><td><input class="boost-in" id="b-heal" value="2" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-heal" style="font-size:10px;color:#bbb;">—</span></td><td>=</td><td><span class="stot" id="tot-heal">+2</span></td></tr>
+      <tr><td><span class="badge chr-b">CHR</span></td><td><span class="sk">Intimidate</span></td><td><span class="b-base" id="base-intimidate">+2</span></td><td class="sep">+</td><td><input class="boost-in" id="b-intimidate" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-intimidate" class="tier-chip">+2</span></td><td>=</td><td><span class="stot" id="tot-intimidate">+4</span></td></tr>
+      <tr><td><span class="badge chr-b">CHR</span></td><td><span class="sk">Linguistics</span></td><td><span class="b-base" id="base-linguistics">+2</span></td><td class="sep">+</td><td><input class="boost-in" id="b-linguistics" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-linguistics" class="tier-chip">+2</span></td><td>=</td><td><span class="stot" id="tot-linguistics">+4</span></td></tr>
+      <tr><td><span class="badge wis-b">WIS</span></td><td><span class="sk">Nature</span></td><td><span class="b-base" id="base-nature">+0</span></td><td class="sep">+</td><td><input class="boost-in" id="b-nature" value="1" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-nature" class="tier-chip">+2</span></td><td>=</td><td><span class="stot" id="tot-nature">+3</span></td></tr>
+      <tr><td><span class="badge wis-b">WIS</span></td><td><span class="sk">Nen</span></td><td><span class="b-base" id="base-nen">+0</span></td><td class="sep">+</td><td><input class="boost-in" id="b-nen" value="1" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-nen" class="tier-chip">+2</span></td><td>=</td><td><span class="stot" id="tot-nen">+3</span></td></tr>
+      <tr><td><span class="badge chr-b">CHR</span></td><td><span class="sk">Perform</span></td><td><span class="b-base" id="base-perform">+2</span></td><td class="sep">+</td><td><input class="boost-in" id="b-perform" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-perform" style="font-size:10px;color:#bbb;">—</span></td><td>=</td><td><span class="stot" id="tot-perform">+2</span></td></tr>
+      <tr><td><span class="badge int-b">INT</span></td><td><span class="sk">Ride <span style="font-size:9px;color:var(--pos);">+3★</span></span></td><td><span class="b-base" id="base-ride">+2</span></td><td class="sep">+</td><td><input class="boost-in" id="b-ride" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-ride" class="tier-chip">+2</span></td><td>=</td><td><span class="stot" id="tot-ride">+4</span></td></tr>
+      <tr><td><span class="badge swp-b">CHR↑</span></td><td><span class="sk">Sense Motive</span></td><td><span class="b-base" id="base-senseM">+2</span></td><td class="sep">+</td><td><input class="boost-in" id="b-senseM" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-senseM" style="font-size:10px;color:#bbb;">—</span></td><td>=</td><td><span class="stot" id="tot-senseM">+2</span></td></tr>
+      <tr><td><span class="badge chr-b">CHR</span></td><td><span class="sk hi">Speech</span></td><td><span class="b-base" id="base-speech">+2</span></td><td class="sep">+</td><td><input class="boost-in" id="b-speech" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-speech" class="tier-chip">+4</span></td><td>=</td><td><span class="stot hi" id="tot-speech">+6</span></td></tr>
+      <tr><td><span class="badge dex-b">DEX</span></td><td><span class="sk hi">Stealth</span></td><td><span class="b-base" id="base-stealth">+5</span></td><td class="sep">+</td><td><input class="boost-in" id="b-stealth" value="1" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-stealth" class="tier-chip">+2</span></td><td>=</td><td><span class="stot hi" id="tot-stealth">+8</span></td></tr>
+      <tr><td><span class="badge int-b">INT</span></td><td><span class="sk hi">Technology</span></td><td><span class="b-base" id="base-technology">+2</span></td><td class="sep">+</td><td><input class="boost-in" id="b-technology" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-technology" class="tier-chip">+4</span></td><td>=</td><td><span class="stot hi" id="tot-technology">+6</span></td></tr>
+      <tr><td><span class="badge dex-b">DEX</span></td><td><span class="sk hi">Thieving</span></td><td><span class="b-base" id="base-thieving">+5</span></td><td class="sep">+</td><td><input class="boost-in" id="b-thieving" value="0" type="number" oninput="recalc()"></td><td class="sep">+</td><td><span id="t-thieving" class="tier-chip">+2</span></td><td>=</td><td><span class="stot hi" id="tot-thieving">+7</span></td></tr>
+    </table>
+    <div style="font-size:9.5px;color:var(--ink3);margin-top:6px;padding-top:5px;border-top:1px dashed var(--warm);">
+      ★ Ride gains +3 on Sparrow or Motorbike → total +7 &nbsp;|&nbsp; CHR↑ = Sense Motive swapped to CHR
+    </div>
+  </div>
+</div>
+
+<!-- WEAPONS -->
+<div class="sec" style="margin-bottom:12px;">
+  <div class="sec-h">Weapons</div>
+  <div class="sec-b">
+
+    <!-- ARC STAFF (default) -->
+    <div class="wpn-card arc-card" id="staff-card">
+      <div class="mode-toggle">
+        <button class="mode-btn on" id="mode-staff" onclick="setMode('staff')">⚡ Staff</button>
+        <button class="mode-btn" id="mode-golden" onclick="setMode('golden')">🔫 Golden Gun</button>
+      </div>
+      <div class="wpn-head">
+        <div class="wpn-name">Altana Arc Staff</div>
+        <span class="wtag wtag-arc">Intrinsic</span>
+        <span class="wtag wtag-intr">Always Available · Tech Spec Vehicle</span>
+        <span class="wtag wtag-intr">5 lbs</span>
+      </div>
+      <div class="wpn-stat"><strong>Damage:</strong> 2D8 + 3 (Staff Proficiency passive)</div>
+      <div class="wpn-stat"><strong>Charged:</strong> + D8 Electric damage · +4 to hit (incl. ranged)</div>
+      <div class="wpn-note">Charged attacks can cleave adjacent enemies. Arc Defense: charged block/dodge gets +4; projectiles blocked by margin 8+ are reflected for half damage. Arc Wave channels a line/cone of pure Electric damage. See Charge State for costs.</div>
+    </div>
+
+    <!-- GOLDEN GUN MODE (hidden) -->
+    <div class="wpn-card gold-card" id="golden-card">
+      <div class="mode-toggle">
+        <button class="mode-btn" onclick="setMode('staff')">← Back to Staff</button>
+      </div>
+      <div class="wpn-head">
+        <div class="wpn-name" style="color:#907020;">⚡ Golden Gun Mode</div>
+        <span class="wtag wtag-gold">Tech Specialization · Arc Staff Transform</span>
+      </div>
+      <div class="wpn-stat"><strong>Damage:</strong> Base gun damage + D10 Fire</div>
+      <div class="wpn-stat"><strong>Ammo:</strong> Double consumption per shot</div>
+      <div class="wpn-note" style="color:#6a5020;">Overpenetrates in a line — hits every target in the shot's path. Costs 50 Charge to activate.</div>
+    </div>
+
+    <!-- MALFEASANCE -->
+    <div class="wpn-card">
+      <div class="wpn-head">
+        <div class="wpn-name">Malfeasance</div>
+        <span class="wtag wtag-mal">Exotic Pistol · 8 lbs</span>
+      </div>
+      <div class="wpn-stat"><strong>Damage:</strong> 2D8 Physical · Pistol Proficiency: +3 to Hit</div>
+      <div class="wpn-note">3 consecutive hits on the same target → rounds DETONATE for 20 Armor-Piercing Explosive damage.</div>
+      <div class="ammo-row">
+        <span class="ammo-lbl">Ammo</span>
+        <button class="ammo-btn" onclick="chgMalAmmo(-1)">−</button>
+        <span class="ammo-val" id="mal-ammo">10/10</span>
+        <button class="ammo-btn" onclick="chgMalAmmo(1)">+</button>
+        <button class="ammo-btn" onclick="malAmmo=MAL_MAX;renderMal()" title="Reload" style="margin-left:4px;font-size:9px;">↺</button>
+      </div>
+      <div class="mhit-row">
+        <span class="mhit-lbl">Consec. Hits</span>
+        <div class="mhit-pip" id="mh0" onclick="setHit(0)"></div>
+        <div class="mhit-pip" id="mh1" onclick="setHit(1)"></div>
+        <div class="mhit-pip" id="mh2" onclick="setHit(2)"></div>
+        <button class="det-btn" id="det-btn" onclick="detonate()">DETONATE</button>
+        <button class="mhit-reset" onclick="malHits=0;renderHits()">Reset</button>
+      </div>
+    </div>
+
+    <!-- COMBAT KNIFE -->
+    <div class="wpn-card knife-card" style="padding:8px 12px;">
+      <div class="wpn-head">
+        <div class="wpn-name">Combat Knife</div>
+        <span class="wtag wtag-knife">Melee · 3 lbs</span>
+      </div>
+      <div class="wpn-stat"><strong>Damage:</strong> D5 Physical</div>
+      <div class="wpn-note">Once per round: block an attack directed at an adjacent character — roll a normal Block roll.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PERKS -->
+<div class="sec">
+  <div class="sec-h">Perks &amp; Passives</div>
+  <div class="sec-b" id="perks-list"></div>
+</div>
+
+</div><!-- /right -->
+</div><!-- /body-grid -->
+
+<!-- INVENTORY + QUEST ITEMS row -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;animation:fadeUp .4s .15s ease both;">
+
+  <!-- INVENTORY -->
+  <div class="sec">
+    <div class="sec-h">Inventory</div>
+    <div class="sec-b">
+      <div class="money-row">
+        <span class="money-lbl">Money</span>
+        <span class="money-disp" id="money-disp">$23,000,100</span>
+        <div class="money-btns">
+          <button class="money-btn" onclick="editMoney(-1)">−</button>
+          <button class="money-btn" onclick="editMoney(1)">+</button>
+          <button class="money-btn" onclick="setMoney()">✎</button>
+        </div>
+      </div>
+      <div id="inv-list"></div>
+      <div class="add-grid">
+        <input class="inv-in" id="inv-n" placeholder="Item name">
+        <input class="inv-in" id="inv-w" placeholder="lbs" type="number">
+        <div class="add-row">
+          <input class="inv-in" id="inv-d" placeholder="Description (optional)">
+          <button class="inv-add-btn" onclick="addItem()">+ Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUEST ITEMS + VEHICLE -->
+  <div class="sec">
+    <div class="sec-h">Quest Items &amp; Vehicle</div>
+    <div class="sec-b">
+      <div class="vehicle-card">
+        <div class="v-name">🛵 Sparrow</div>
+        <div class="v-stat">Speed: ×6 base movement &nbsp;|&nbsp; HP: <strong><span id="sp-hp">20</span>/20</strong></div>
+        <div class="sparrow-bar-wrap"><div class="sparrow-bar-fill" id="sp-fill" style="width:100%;"></div></div>
+        <div class="v-ctrl">
+          <button class="v-btn" onclick="chgSparrow(-5)">−5</button>
+          <button class="v-btn" onclick="chgSparrow(-1)">−1</button>
+          <button class="v-btn" onclick="chgSparrow(1)">+1</button>
+          <button class="v-btn" onclick="chgSparrow(5)">+5</button>
+          <button class="v-btn" onclick="spHP=20;renderSparrow()">↺</button>
+        </div>
+        <div class="v-note">Explodes at 0HP · Full turn to summon &amp; mount · Roll Ride to defend while mounted · All damage hits vehicle first</div>
+      </div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;">Quest Items</div>
+      <div class="qi-item"><span class="qi-ico">📄</span><span class="qi-name">B.N. Morgan's Envelope</span></div>
+      <div class="qi-item"><span class="qi-ico">📷</span><span class="qi-name">Polaroid — German Base Storage Unit</span></div>
+      <div class="qi-item"><span class="qi-ico">🌀</span><span class="qi-name">Real Portal Gun <span class="qi-note">12 lbs</span></span></div>
+      <div class="qi-item"><span class="qi-ico">💎</span><span class="qi-name">Large Green Crystal <span class="qi-note">5 lbs</span></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LANGUAGES -->
+<div class="sec" style="margin-bottom:12px;animation:fadeUp .4s .16s ease both;">
+  <div class="sec-h">Languages</div>
+  <div class="sec-b"><div class="lang-wrap" id="lang-wrap"></div></div>
+</div>
+
+<!-- COMPANIONS -->
+<div class="sec" style="animation:fadeUp .4s .17s ease both;">
+  <div class="sec-h">Current Party <button class="add-btn" onclick="addCompanion()" style="margin-left:auto;color:var(--acc);">+ Add</button></div>
+  <div class="sec-b" id="comp-list"></div>
+</div>
+
+</div><!-- /page -->
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────────
+const VITALS={hp:{cur:65,max:65},arm:{cur:60,max:60},mv:{cur:8,max:8}};
+const ARMOR_DATA={tech:{hp:60,mv:3},bella:{hp:65,mv:2}};
+let armorSlot='tech';
+const RS={heal:{c:3,m:3},rep:{c:3,m:3},adr:{c:3,m:3}};
+let superUsed=false;
+let charge=150;const CMAX=150;
+const SKILL_ATTR={acrobatics:'dex',athletics:'str',awareness:'int',engineering:'int',fortitude:'con',heal:'wis',intimidate:'chr',linguistics:'chr',nature:'wis',nen:'wis',perform:'chr',ride:'int',senseM:'chr',speech:'chr',stealth:'dex',technology:'int',thieving:'dex'};
+const SKILL_TIER={acrobatics:2,athletics:0,awareness:4,engineering:5,fortitude:2,heal:0,intimidate:2,linguistics:2,nature:2,nen:2,perform:0,ride:2,senseM:0,speech:4,stealth:2,technology:4,thieving:2};
+let money=23000100,sup=100;
+let malAmmo=10;const MAL_MAX=10;let malHits=0;
+let spHP=20;
+let statuses=[];
+let langs=['English','Spanish','Russian','African (Major)'];
+let dynItems=[];
+let resists=['Electric','Radiation'];
+let weaknesses=['Acid'];
+let perks=[
+  {id:1,on:true,name:'Charged Attack [Tech Spec]',desc:'Tech Specialization output. When arc-charged: +D8 Electric on hit · +4 to hit (including ranged) · Can cleave adjacent enemies. Cost: 20 charge (single) / 35 (cleave).'},
+  {id:2,on:true,name:'Arc Defense [Tech Spec]',desc:'Tech Specialization output. When arc-charged and defending: +4 to all Block/Dodge rolls. Projectiles blocked by a margin of 8 or more are reflected at the attacker for half damage. Cost: 25 charge.'},
+  {id:3,on:true,name:'Arc Wave [Tech Spec]',desc:'Tech Specialization output. Channel the Arc Staff into a wave/line/cone of pure Electric damage. Cost: 30 charge.'},
+  {id:4,on:true,name:'Golden Gun [Tech Spec]',desc:'Tech Specialization output. Transform Arc Staff into Golden Gun mode. Base gun damage + D10 Fire. Double ammo per shot. Overpenetrates targets in a line. Cost: 50 charge.'},
+  {id:5,on:true,name:'Cover Block',desc:'Once per round: block an attack directed at an adjacent character. Roll a normal Block roll. No action cost.'},
+  {id:6,on:true,name:'Staff Proficiency',desc:'+3 Damage with all staff-type weapons. Included passively in Arc Staff base damage.'},
+  {id:7,on:true,name:'Pistol Proficiency',desc:'+3 to Hit with all pistol-type weapons, including Malfeasance.'},
+  {id:8,on:true,name:'Malfeasance: Detonation',desc:'3 consecutive hits on the same target triggers detonation of all embedded rounds for 20 Armor-Piercing Explosive damage.'},
+  {id:9,on:true,name:'Extra Attack',desc:'2 attacks per Main Action (Level 9 standard unlock).'},
+  {id:10,on:false,name:'Total Defense (inactive)',desc:'Spend Main Action on Total Defense — no attacks, but significant defensive bonuses this turn. Unlock pending.'},
+];
+// Training tiers
+const ATNAMES={str:'Strength',dex:'Dexterity',con:'Constitution',int:'Intelligence',wis:'Wisdom',chr:'Charisma'};
+const TRAIN_F={str:2,dex:4,con:3,int:4,wis:1,chr:2};
+let choices={str_wpn:'Staff',dex_wpn:'Pistol',int_s1:'Technology',int_s3:'Engineering',int_path:'Tech Specialization'};
+let pendingModal=null;
+const TD={
+ str:[
+  {t:1,title:'+20 Carry · +1 Melee Attack',desc:'Carry weight max +20 lbs. All melee attack rolls +1 permanently.',gate:null,choice:null},
+  {t:2,title:'Melee Proficiency · +3 Damage',desc:'Choose one melee weapon type. Gain +3 damage. Scales: +6 T6, +8 T8, +10 T9.',gate:null,choice:{type:'text',key:'str_wpn',prompt:'Which melee weapon type?',ph:'e.g. Staff, Sword, Blunt'}},
+  {t:3,title:'+2 All Melee · +1 Block · Die Up',desc:'+2 all melee attacks. +1 Block. Proficient weapon die improves one step.',gate:null,choice:null},
+  {t:4,title:'+3 STR · Attack of Opportunity',desc:'STR +3. AoO: enemy leaves melee range without Dodging triggers one free melee attack. Once/round.',gate:'STR 15+',choice:null},
+  {t:5,title:'Cleave',desc:'Main Action attacks hit one additional adjacent enemy.',gate:null,choice:null},
+  {t:6,title:'+6 Proficiency · +2 Other Melee',desc:'Proficiency scales to +6 damage. +2 all other melee.',gate:null,choice:null},
+  {t:7,title:'Supplies→200 · Ignore 5 Armor HP',desc:'Supply max 200. Melee ignores first 5 Armor HP.',gate:'STR 25+',choice:null},
+  {t:8,title:'+7 STR · Proficiency +8 · Push',desc:'STR +7. Proficiency +8. Melee hits push 5ft.',gate:null,choice:null},
+  {t:9,title:'+10 All Melee · +5ft Reach · All Cleave',desc:'Proficiency +10 all melee. +5ft reach. Cleave hits all adjacent.',gate:'STR 40+',choice:null},
+  {t:10,title:'+10 STR · AoO Twice/Round',desc:'STR +10. AoO twice per round.',gate:null,choice:null},
+  {t:11,title:'+10 STR (→60) · Momentum',desc:'STR +10, cap 60. No carry limit. Melee pierces 10 Armor HP. On kill: free attack vs nearby target.',gate:'STR 50+',choice:null},
+ ],
+ dex:[
+  {t:1,title:'+2 to Any Dodge',desc:'All Dodge rolls +2 permanently.',gate:null,choice:null},
+  {t:2,title:'Ranged Proficiency · +3 to Hit',desc:'Choose one ranged weapon type. +3 to hit. Scales: +6 T7, +10 T9.',gate:null,choice:{type:'text',key:'dex_wpn',prompt:'Which ranged weapon type?',ph:'e.g. Pistol, Rifle'}},
+  {t:3,title:'Equipping = Free Action',desc:'Drawing, switching weapons costs no movement.',gate:null,choice:null},
+  {t:4,title:'All DEX Skills +2',desc:'Acrobatics, Stealth, Thieving each +2.',gate:'DEX 15+',choice:null},
+  {t:5,title:'+3 Permanent Movement',desc:'Base movement permanently +3. Cap 12.',gate:null,choice:null},
+  {t:6,title:'+5 to Any Dodge',desc:'All Dodge rolls additional +5.',gate:null,choice:null},
+  {t:7,title:'+6 Ranged · Quick Draw',desc:'Ranged proficiency +6. Draw and fire same action.',gate:'DEX 25+',choice:null},
+  {t:8,title:'DEX Skills +4 · Ignore Cover',desc:'Acrobatics, Stealth, Thieving +4 more. Ranged ignores partial cover.',gate:null,choice:null},
+  {t:9,title:'+6 DEX · Ranged +10 · +30ft',desc:'DEX +6. Proficiency +10 all ranged. Range +30ft.',gate:'DEX 40+',choice:null},
+  {t:10,title:'+10 DEX · No AoO · Dodge = 2 Sq',desc:'DEX +10. Movement no longer provokes AoO. Dodge grants 2 free squares.',gate:null,choice:null},
+  {t:11,title:'+10 DEX (→60) · Always First',desc:'DEX +10, cap 60. Always first in initiative. Successful Dodge: free counterattack +2.',gate:'DEX 50+',choice:null},
+ ],
+ con:[
+  {t:1,title:'+2 to Any Block · +2 Fortitude',desc:'+2 any Block. +2 Fortitude skill.',gate:null,choice:null},
+  {t:2,title:'+25 Max HP',desc:'Maximum HP +25 permanently.',gate:null,choice:null},
+  {t:3,title:'+3 CON · +2 Movement',desc:'CON +3. Base movement +2.',gate:null,choice:null},
+  {t:4,title:'+2 CON · 1 Damage Resistance',desc:'CON +2. Choose one damage type resistance.',gate:'CON 15+',choice:{type:'radio',key:'con_r4',prompt:'Choose damage resistance:',opts:[{v:'Fire'},{v:'Earth'},{v:'Air'},{v:'Water'},{v:'Ice'},{v:'Electric'},{v:'Poison'},{v:'Acid'},{v:'Radiation'},{v:'Light'},{v:'Shadow'}]}},
+  {t:5,title:'+3 CON · Fortitude Expands',desc:'CON +3. Fortitude covers supernatural status effects.',gate:null,choice:null},
+  {t:6,title:'Two Elemental Resistances',desc:'+1 resistance each to two damage types.',gate:null,choice:{type:'text',key:'con_r6',prompt:'Name two damage resistances:',ph:'e.g. Electric and Radiation'}},
+  {t:7,title:'+7 to Any Block',desc:'+7 bonus to one Block roll per turn.',gate:'CON 25+',choice:null},
+  {t:8,title:'Status Halved · Min Dmg → 1',desc:'Status effect duration halved. Minimum damage 1.',gate:null,choice:null},
+  {t:9,title:'+8 CON · +50 HP · −2 Physical',desc:'CON +8. Max HP +50. Incoming Physical −2.',gate:'CON 40+',choice:null},
+  {t:10,title:'4 Resistances · Double = Immunity',desc:'4 more damage resistances. Double-stack = immunity.',gate:null,choice:{type:'text',key:'con_r10',prompt:'Name four resistances:',ph:'e.g. Fire, Ice, Acid, Radiation'}},
+  {t:11,title:'+10 CON (→60) · Refuses to Die',desc:'CON +10, cap 60. HP +150. Once/session: stabilize at 1 HP at 0.',gate:'CON 50+',choice:null},
+ ],
+ int:[
+  {t:1,title:'+2 Chosen INT Skill · +2 Awareness',desc:'One INT skill +2. Awareness +2.',gate:null,choice:{type:'radio',key:'int_s1',prompt:'Which INT skill gets +2?',opts:[{v:'Awareness'},{v:'Engineering'},{v:'Technology'},{v:'Ride'}]}},
+  {t:2,title:'+2 All INT Skills',desc:'Technology, Awareness, Engineering, Ride each +2.',gate:null,choice:null},
+  {t:3,title:'+3 INT · +3 Chosen INT Skill',desc:'INT +3. One INT skill +3.',gate:null,choice:{type:'radio',key:'int_s3',prompt:'Which INT skill gets +3?',opts:[{v:'Awareness'},{v:'Engineering'},{v:'Technology'},{v:'Ride'}]}},
+  {t:4,title:'Tech Specialization OR Tactical Analysis',desc:'Permanent path: Tech (gadgets, energy cells, augments) or Tactical (INT mod initiative, awareness reads on enemies).',gate:'INT 15+',choice:{type:'radio',key:'int_path',prompt:'Choose INT path:',opts:[{v:'Tech Specialization',d:'Gadgets · Energy Cells · Vehicle Proficiency · Augments'},{v:'Tactical Analysis',d:'INT mod initiative · Awareness reads · floor(INT÷2) to attacks'}]}},
+  {t:5,title:'Path Develops · floor(INT÷2) to Attacks',desc:'Path advances. floor(INT÷2) to ALL attack rolls.',gate:null,choice:null},
+  {t:6,title:'+3 Technology/Engineering · +5 Ride',desc:'Technology +3, Engineering +3, Ride +5.',gate:null,choice:null},
+  {t:7,title:'Path Advances',desc:'Tech: more gadgets, reduced costs. Tactical: +3 all INT skills, +2 Block/Dodge.',gate:'INT 25+',choice:null},
+  {t:8,title:'+5 All INT Skills · Enhanced Passive',desc:'All INT skills +5. Path passive enhanced.',gate:null,choice:null},
+  {t:9,title:'+7 INT · Full INT Mod to Attacks',desc:'INT +7. Full INT modifier to ALL attack rolls.',gate:'INT 40+',choice:null},
+  {t:10,title:'Path Mastery',desc:'Tech: INT mod to attack/defense on Tech use, Major Augments. Tactical: once/round Free Action apply INT mod to a Block or Dodge.',gate:null,choice:null},
+  {t:11,title:'+10 INT (→60) · Apex',desc:'INT +10, cap 60. Path transcends.',gate:'INT 50+',choice:null},
+ ],
+ wis:[
+  {t:1,title:'+2 Nen · +2 Nature',desc:'Nen and Nature skills +2 each.',gate:null,choice:null},
+  {t:2,title:'+3 Chosen WIS Skill',desc:'One WIS skill +3.',gate:null,choice:{type:'radio',key:'wis_s2',prompt:'Which WIS skill +3?',opts:[{v:'Heal'},{v:'Sense Motive'},{v:'Nature'},{v:'Nen'}]}},
+  {t:3,title:'Nen Resistance · +2 Nature/Awareness',desc:'Resistance to Nen damage. Nature +2. Awareness +2.',gate:null,choice:null},
+  {t:4,title:'Nen Ability OR Natural Attunement',desc:'Permanent path choice.',gate:'WIS 15+',choice:{type:'radio',key:'wis_path',prompt:'Choose WIS path:',opts:[{v:'Nen Ability',d:'Internal energy · Nen type and first ability'},{v:'Natural Attunement',d:'Elemental/Flora/Fauna — Connection Pool'}]}},
+  {t:5,title:'All WIS Skills +3',desc:'Heal, Sense Motive, Nature, Nen each +3.',gate:null,choice:null},
+  {t:6,title:'+7 HP per Heal · Path Bonus',desc:'+7 HP on every Heal charge use (result above 1).',gate:null,choice:null},
+  {t:7,title:'All WIS Skills +3 Again',desc:'Additional +3 to all WIS skills.',gate:'WIS 25+',choice:null},
+  {t:8,title:'Path Advances',desc:'Nen: +10 Nen, Stamina +30, floor(WIS÷2) to Nen attacks.',gate:null,choice:null},
+  {t:9,title:'Full WIS Mod to Path Attacks',desc:'Full WIS modifier to all Nen or Attunement attack rolls.',gate:'WIS 40+',choice:null},
+  {t:10,title:'Path Apex',desc:'+15 chosen WIS skill. Unique Ability (DM-assigned).',gate:null,choice:null},
+  {t:11,title:'+10 WIS (→60) · Pinnacle',desc:'WIS +10, cap 60. Pinnacle expression of path.',gate:'WIS 50+',choice:null},
+ ],
+ chr:[
+  {t:1,title:'+2 Linguistics · +2 Speech',desc:'Linguistics and Speech +2 each.',gate:null,choice:null},
+  {t:2,title:'Extra Dialogue · +2 Speech/Intimidate',desc:'Extra Dialogue per turn. Speech +2. Intimidate +2. Combat Intimidate as Bonus Action.',gate:null,choice:null},
+  {t:3,title:'+3 CHR · +3 Perform · Auto-20 Speech',desc:'CHR +3. Perform +3. Once/session auto-20 on declared Speech check.',gate:null,choice:null},
+  {t:4,title:'Presence OR Pact · floor(CHR÷2) Attacks',desc:'Permanent path choice. floor(CHR÷2) to all attack rolls.',gate:'CHR 15+',choice:{type:'radio',key:'chr_path',prompt:'Choose CHR path:',opts:[{v:'Presence',d:'Aura and Rally — battlefield control'},{v:'Pact',d:'Named entity covenant — special abilities'}]}},
+  {t:5,title:'Path Develops · +2 All CHR Skills',desc:'Presence aura expands. All CHR skills +2.',gate:null,choice:null},
+  {t:6,title:'All CHR Skills +3',desc:'All CHR skills +3.',gate:null,choice:null},
+  {t:7,title:'Prices Halved · +8 CHR · Animal Speech',desc:'All prices halved permanently. CHR +8. Communicate with animals.',gate:'CHR 25+',choice:null},
+  {t:8,title:'CHR Skills +3 · +4 CHR · Rally ×2',desc:'CHR +3 all skills. CHR +4. Rallying Shout twice/combat.',gate:null,choice:null},
+  {t:9,title:'+7 CHR · Full CHR Mod to Attacks',desc:'CHR +7. Full CHR modifier all attack rolls.',gate:'CHR 40+',choice:null},
+  {t:10,title:'+10 CHR · CHR Mod Combat · 2nd Presence',desc:'CHR +10. CHR mod to combat ability rolls. Second Presence.',gate:null,choice:null},
+  {t:11,title:'+10 CHR (→60) · Unsuppressable',desc:'CHR +10, cap 60. Aura cannot be suppressed. 50ft rally.',gate:'CHR 50+',choice:null},
+ ],
+};
+
+// ── UTILS ──────────────────────────────────────────────────────────────────────
+function mod(s){return Math.floor((s-6)/2);}
+function fmt(n){return(n>=0?'+':'')+n;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtM(n){if(n>=1e9)return(n/1e9).toFixed(2)+'B';if(n>=1e6)return(n/1e6).toFixed(3)+'M';return n.toLocaleString();}
+function calcCarry(str){return Math.max(40,str*10);}
+function calcW(){
+  let w=0;
+  if(armorSlot==='tech')w+=20;else w+=30;
+  w+=5+8+3+12+5; // staff+malf+knife+portal+crystal
+  w+=25;         // 100 supplies = 25 lbs
+  dynItems.forEach(i=>w+=(+i.w||0));
+  return w;
+}
+function conCap(con){
+  if(con<=6)return 1;
+  if(con<=10)return 2;
+  if(con<=20)return 3;
+  if(con<=30)return 4;
+  if(con<=40)return 5;
+  if(con<=50)return 6;
+  return 7;
+}
+
+// ── RECALC ─────────────────────────────────────────────────────────────────────
+function recalc(){
+  const sc={str:+document.getElementById('a-str').value||1,dex:+document.getElementById('a-dex').value||1,con:+document.getElementById('a-con').value||1,int:+document.getElementById('a-int').value||1,wis:+document.getElementById('a-wis').value||1,chr:+document.getElementById('a-chr').value||1};
+  // Update resource caps from CON
+  const cap=conCap(sc.con);
+  Object.keys(RS).forEach(id=>{
+    const old=RS[id].m;RS[id].m=cap;
+    if(RS[id].c>cap)RS[id].c=cap;
+    if(old!==cap)renderPips(id);
+  });
+  ['str','dex','con','int','wis','chr'].forEach(a=>{
+    const m=mod(sc[a]),el=document.getElementById('m-'+a);
+    if(!el)return;
+    el.textContent=fmt(m);
+    el.className='amod '+(m>0?'pos':m<0?'neg':'zero');
+  });
+  document.getElementById('v-init').textContent='d20'+fmt(mod(sc.dex));
+  const maxC=calcCarry(sc.str);
+  document.getElementById('carry-max').textContent=maxC;
+  const curW=calcW();
+  document.getElementById('carry-cur').textContent=curW;
+  const pct=Math.min(100,Math.round(curW/maxC*100));
+  const cf=document.getElementById('carry-fill-bar');
+  if(cf){cf.style.width=pct+'%';cf.style.background=pct>85?'var(--neg)':pct>65?'#e65100':'#2e7d32';}
+  Object.keys(SKILL_ATTR).forEach(sk=>{
+    const base=mod(sc[SKILL_ATTR[sk]]);
+    const boost=+(document.getElementById('b-'+sk)?.value)||0;
+    const tier=SKILL_TIER[sk]||0;
+    const total=base+boost+tier;
+    const bEl=document.getElementById('base-'+sk);
+    const tEl=document.getElementById('t-'+sk);
+    const totEl=document.getElementById('tot-'+sk);
+    if(bEl){bEl.textContent=fmt(base);bEl.style.color=base<0?'var(--neg)':'';}
+    if(tEl&&tier>0){tEl.textContent='+'+tier;tEl.className='tier-chip';}
+    else if(tEl){tEl.textContent='—';tEl.className='';tEl.style.cssText='font-size:10px;color:#bbb;';}
+    if(totEl){totEl.textContent=fmt(total);totEl.className='stot '+(total>=5?'hi':total<0?'neg':'');}
+  });
+}
+
+// ── VITALS ─────────────────────────────────────────────────────────────────────
+function renderV(id){
+  const V=VITALS[id];
+  const pct=V.max>0?Math.round(V.cur/V.max*100):0;
+  const el=document.getElementById('v-'+id);
+  if(el){el.textContent=V.cur+'/'+V.max;el.className='vval'+(pct<=25?' low':pct<=50?' mid':'');}
+  const fill=document.getElementById('vbar-'+id);
+  if(fill){
+    fill.style.width=Math.max(0,pct)+'%';
+    if(id==='arm')fill.style.background='var(--acc)';
+    else fill.style.background=pct>60?'#2e7d32':pct>25?'#e65100':'#c62828';
+  }
+  const mx=document.getElementById('vmax-'+id);
+  if(mx)mx.textContent=V.max;
+}
+function chgV(id,d){VITALS[id].cur=Math.max(-50,Math.min(VITALS[id].max,VITALS[id].cur+d));renderV(id);}
+function resetV(id){VITALS[id].cur=VITALS[id].max;renderV(id);}
+function editVMax(id){
+  const v=prompt('Set max '+id.toUpperCase()+':',VITALS[id].max);
+  if(v===null)return;const n=parseInt(v);
+  if(!isNaN(n)&&n>0){VITALS[id].max=n;VITALS[id].cur=Math.min(VITALS[id].cur,n);renderV(id);}
+}
+function initVitals(){['hp','arm','mv'].forEach(id=>renderV(id));}
+
+// ── ARMOR TOGGLE ───────────────────────────────────────────────────────────────
+function setArmor(s){
+  armorSlot=s;
+  const a=ARMOR_DATA[s];
+  VITALS.arm.max=a.hp;VITALS.arm.cur=Math.min(VITALS.arm.cur,a.hp);
+  renderV('arm');
+  document.getElementById('arm-tech').className='arm-tab'+(s==='tech'?' on':'');
+  document.getElementById('arm-bella').className='arm-tab'+(s==='bella'?' on':'');
+}
+
+// ── RESOURCES ─────────────────────────────────────────────────────────────────
+function renderPips(id){
+  const R=RS[id],cont=document.getElementById(id+'-pips');
+  if(!cont)return;cont.innerHTML='';
+  for(let i=0;i<R.m;i++){
+    const p=document.createElement('div');
+    p.className='pip'+(i<R.c?' on':'');
+    p.onclick=()=>{R.c=R.c===i+1?i:i+1;renderPips(id);document.getElementById(id+'-cnt').textContent=R.c+' / '+R.m;};
+    cont.appendChild(p);
+  }
+  document.getElementById(id+'-cnt').textContent=R.c+' / '+R.m;
+}
+function editResMax(id){
+  const v=prompt('Set max (override):',RS[id].m);if(v===null)return;
+  const n=parseInt(v);if(!isNaN(n)&&n>=0){RS[id].override=n;RS[id].m=n;RS[id].c=Math.min(RS[id].c,n);renderPips(id);}
+}
+
+// ── SUPER CHARGE ───────────────────────────────────────────────────────────────
+function useSuper(){
+  if(superUsed)return;
+  if(!confirm('Use Super Charge? Restores HP to full — gone forever.'))return;
+  superUsed=true;
+  VITALS.hp.cur=VITALS.hp.max;renderV('hp');
+  const card=document.getElementById('super-card');
+  const grid=document.getElementById('res-grid');
+  if(card){
+    card.style.transition='opacity .3s';
+    card.style.opacity='0';
+    setTimeout(()=>{
+      card.style.display='none';
+      if(grid)grid.style.gridTemplateColumns='repeat(3,1fr)';
+    },300);
+  }
+}
+
+// ── CHARGE STATE ───────────────────────────────────────────────────────────────
+const ABL_COSTS=[20,35,25,30,50];
+function renderCharge(){
+  const pct=Math.round(charge/CMAX*100);
+  document.getElementById('charge-fill').style.width=pct+'%';
+  document.getElementById('charge-val').textContent=charge+' / '+CMAX;
+  ABL_COSTS.forEach((c,i)=>{
+    const btn=document.getElementById('abl-'+i);
+    if(btn)btn.className='abl-btn'+(charge<c?' dim':'');
+  });
+}
+function chgCharge(d){charge=Math.max(0,Math.min(CMAX,charge+d));renderCharge();}
+function spendCharge(cost,name){
+  if(charge<cost){alert('Not enough charge for '+name+'.\nNeed: '+cost+' · Have: '+charge);return;}
+  if(!confirm('Spend '+cost+' charge for '+name+'?'))return;
+  charge-=cost;renderCharge();
+}
+
+// ── SUPPLIES ───────────────────────────────────────────────────────────────────
+function chgSup(d){sup=Math.max(0,Math.min(100,sup+d));document.getElementById('sup-v').textContent=sup;}
+
+// ── WEAPON MODE ────────────────────────────────────────────────────────────────
+function setMode(m){
+  const sc=document.getElementById('staff-card');
+  const gc=document.getElementById('golden-card');
+  if(m==='staff'){
+    sc.style.display='';
+    gc.style.display='none';
+    document.getElementById('mode-staff').className='mode-btn on';
+    document.getElementById('mode-golden').className='mode-btn';
+  }else{
+    sc.style.display='none';
+    gc.style.display='block';
+  }
+}
+
+// ── MALFEASANCE ────────────────────────────────────────────────────────────────
+function renderMal(){document.getElementById('mal-ammo').textContent=malAmmo+'/'+MAL_MAX;}
+function chgMalAmmo(d){malAmmo=Math.max(0,Math.min(MAL_MAX,malAmmo+d));renderMal();}
+function setHit(i){malHits=malHits===i+1?i:i+1;renderHits();}
+function renderHits(){
+  for(let i=0;i<3;i++){
+    const p=document.getElementById('mh'+i);if(!p)continue;
+    if(i<malHits)p.className='mhit-pip'+(malHits>=3?' det':' on');
+    else p.className='mhit-pip';
+  }
+  const d=document.getElementById('det-btn');
+  if(d)d.className='det-btn'+(malHits>=3?' show':'');
+}
+function detonate(){
+  if(malHits<3)return;
+  alert('💥 DETONATE! 20 Armor-Piercing Explosive damage!');
+  malHits=0;renderHits();
+}
+
+// ── SPARROW ────────────────────────────────────────────────────────────────────
+function renderSparrow(){
+  document.getElementById('sp-hp').textContent=spHP;
+  document.getElementById('sp-fill').style.width=(spHP/20*100)+'%';
+  if(spHP<=0)alert('SPARROW DESTROYED — explodes!');
+}
+function chgSparrow(d){spHP=Math.max(0,Math.min(20,spHP+d));renderSparrow();}
+
+// ── STATUS ─────────────────────────────────────────────────────────────────────
+function addStatus(){
+  const n=prompt('Status effect:');if(!n)return;
+  const t=parseInt(prompt('Turns (-1 = permanent):'));
+  statuses.push({id:Date.now(),name:n,turns:isNaN(t)?-1:t});
+  renderStatus();
+}
+function removeStatus(id){statuses=statuses.filter(s=>s.id!==id);renderStatus();}
+function renderStatus(){
+  const el=document.getElementById('status-list');if(!el)return;
+  if(!statuses.length){el.innerHTML='<span style="font-size:11px;color:#bbb;font-style:italic;">None active</span>';return;}
+  el.innerHTML=statuses.map(s=>`<span class="status-chip">${esc(s.name)}<span class="stc-t">${s.turns<0?'∞':s.turns+'t'}</span><button onclick="removeStatus(${s.id})" title="Remove">✕</button></span>`).join('');
+}
+
+// ── PERKS ──────────────────────────────────────────────────────────────────────
+function renderPerks(){
+  const el=document.getElementById('perks-list');if(!el)return;
+  el.innerHTML=perks.map(p=>`<div class="perk-item"><div class="perk-tog${p.on?' on':''}" onclick="togglePerk(${p.id})"></div><div style="flex:1"><div class="perk-name">${esc(p.name)}</div><div class="perk-desc">${esc(p.desc)}</div></div></div>`).join('');
+}
+function togglePerk(id){const p=perks.find(x=>x.id===id);if(p){p.on=!p.on;renderPerks();}}
+
+// ── LANGUAGES ─────────────────────────────────────────────────────────────────
+function renderLangs(){
+  const w=document.getElementById('lang-wrap');if(!w)return;
+  w.innerHTML=langs.map((l,i)=>`<span class="lang-chip">${esc(l)}<button onclick="removeLang(${i})" title="Remove">✕</button></span>`).join('')+`<button class="lang-add" onclick="addLang()">+ Add Language</button>`;
+}
+function addLang(){const v=prompt('Add language:');if(v&&v.trim()){langs.push(v.trim());renderLangs();}}
+function removeLang(i){langs.splice(i,1);renderLangs();}
+
+// ── INVENTORY ──────────────────────────────────────────────────────────────────
+function addItem(){
+  const n=document.getElementById('inv-n').value.trim();if(!n)return;
+  dynItems.push({id:Date.now(),n,w:parseFloat(document.getElementById('inv-w').value)||0,d:document.getElementById('inv-d').value.trim()});
+  document.getElementById('inv-n').value='';document.getElementById('inv-w').value='';document.getElementById('inv-d').value='';
+  renderInv();recalc();
+}
+function removeItem(id){dynItems=dynItems.filter(x=>x.id!==id);renderInv();recalc();}
+function renderInv(){
+  const el=document.getElementById('inv-list');if(!el)return;
+  if(!dynItems.length){el.innerHTML='<div style="font-size:11px;color:#bbb;padding:4px 0;font-style:italic;">No additional items</div>';return;}
+  el.innerHTML=dynItems.map(i=>`<div class="inv-item"><div><div class="inv-name">${esc(i.n)}</div>${i.d?`<div class="inv-desc">${esc(i.d)}</div>`:''}</div><div class="inv-w">${i.w||0} lbs</div><button class="inv-del" onclick="removeItem(${i.id})">✕</button></div>`).join('');
+}
+
+// ── MONEY ──────────────────────────────────────────────────────────────────────
+function editMoney(d){
+  const a=parseInt(prompt(d>0?'Add how much?':'Spend how much?'))||0;
+  money=Math.max(0,money+(d>0?a:-a));
+  document.getElementById('money-disp').textContent='$'+fmtM(money);
+}
+function setMoney(){
+  const v=prompt('Set money:',money);if(v===null)return;
+  const n=parseInt(v.replace(/[^0-9]/g,''));
+  if(!isNaN(n)){money=n;document.getElementById('money-disp').textContent='$'+fmtM(money);}
+}
+
+// ── RESISTANCES ────────────────────────────────────────────────────────────────
+function addResist(){const v=prompt('Add resistance:');if(v&&v.trim()){resists.push(v.trim());renderResist();}}
+function removeResist(i){resists.splice(i,1);renderResist();}
+function addWeak(){const v=prompt('Add weakness:');if(v&&v.trim()){weaknesses.push(v.trim());renderResist();}}
+function removeWeak(i){weaknesses.splice(i,1);renderResist();}
+function renderResist(){
+  const rl=document.getElementById('resist-list'),wl=document.getElementById('weak-list');
+  if(rl)rl.innerHTML=resists.length?resists.map((r,i)=>`<span class="r-chip">${esc(r)}<button class="chip-x" onclick="removeResist(${i})">✕</button></span>`).join(''):'<span style="font-size:10px;color:#bbb;">None</span>';
+  if(wl)wl.innerHTML=weaknesses.length?weaknesses.map((w,i)=>`<span class="w-chip">${esc(w)}<button class="chip-x" onclick="removeWeak(${i})">✕</button></span>`).join(''):'<span style="font-size:10px;color:#bbb;">None</span>';
+}
+
+// ── TRAINING ──────────────────────────────────────────────────────────────────
+function showTip(e,tier,head,desc,gate){
+  const t=document.getElementById('tip');if(!t)return;
+  document.getElementById('tip-t').textContent='Tier '+tier;
+  document.getElementById('tip-h').textContent=head;
+  document.getElementById('tip-d').textContent=desc;
+  document.getElementById('tip-g').textContent=gate?'Gate: '+gate:'';
+  t.style.display='block';moveTip(e);
+}
+function hideTip(){const t=document.getElementById('tip');if(t)t.style.display='none';}
+function moveTip(e){
+  const t=document.getElementById('tip');if(!t||t.style.display==='none')return;
+  t.style.left=Math.min(e.clientX+14,window.innerWidth-280)+'px';
+  t.style.top=Math.max(0,e.clientY-10)+'px';
+}
+document.addEventListener('mousemove',e=>{const t=document.getElementById('tip');if(t&&t.style.display!=='none'){t.style.left=Math.min(e.clientX+14,window.innerWidth-280)+'px';t.style.top=Math.max(0,e.clientY-10)+'px';}});
+
+function buildTraining(){
+  const cont=document.getElementById('training-rows');if(!cont)return;cont.innerHTML='';
+  Object.keys(TD).forEach(attr=>{
+    const row=document.createElement('div');row.className='tr-row';
+    const filled=TRAIN_F[attr]||0;
+    const nm=document.createElement('div');nm.className='tr-name';
+    nm.innerHTML=ATNAMES[attr]+`<span class="tr-tier">${filled}/11</span>`;
+    row.appendChild(nm);
+    const pp=document.createElement('div');pp.className='tr-pips';
+    TD[attr].forEach((tier,idx)=>{
+      const pip=document.createElement('div');
+      pip.className='tp'+(idx<filled?' on':'')+(tier.gate?' gate':'');
+      pip.addEventListener('mouseenter',e=>showTip(e,tier.t,tier.title,tier.desc,tier.gate));
+      pip.addEventListener('mouseleave',hideTip);
+      pip.onclick=()=>{
+        if(idx<filled){
+          if(!confirm('Deactivate tiers '+(idx+1)+' and above for '+ATNAMES[attr]+'?'))return;
+          TRAIN_F[attr]=idx;
+        }else{
+          TRAIN_F[attr]=idx+1;
+          if(tier.choice&&!choices[tier.choice.key])openModal(attr,tier);
+        }
+        buildTraining();updateChoicesPanel();renderCompanions();
+// Restore super charge visual state on load
+(function(){
+  if(superUsed){
+    const card=document.getElementById('super-card');
+    const grid=document.getElementById('res-grid');
+    if(card)card.style.display='none';
+    if(grid)grid.style.gridTemplateColumns='repeat(3,1fr)';
+  }
+})();recalc();
+      };
+      pp.appendChild(pip);
+    });
+    row.appendChild(pp);cont.appendChild(row);
+  });
+}
+function updateChoicesPanel(){
+  const panel=document.getElementById('tc-panel'),items=document.getElementById('tc-items');if(!panel||!items)return;
+  const keys=Object.keys(choices).filter(k=>choices[k]);
+  if(!keys.length){panel.style.display='none';return;}
+  panel.style.display='block';
+  items.innerHTML=keys.map(k=>`<div class="tc-item"><span class="tc-k">${esc(k.replace(/_/g,' '))}:</span><span class="tc-v">${esc(choices[k])}</span><button class="tc-x" onclick="delete choices['${k}'];updateChoicesPanel()">✕</button></div>`).join('');
+}
+function openModal(attr,tier){
+  const ch=tier.choice;pendingModal={key:ch.key};
+  document.getElementById('m-head').textContent=ATNAMES[attr]+' — Tier '+tier.t+' Choice';
+  document.getElementById('m-para').textContent=ch.prompt;
+  const opts=document.getElementById('m-opts');opts.innerHTML='';
+  if(ch.type==='radio'&&ch.opts){
+    ch.opts.forEach(o=>{
+      const d=document.createElement('div');d.className='mopt';
+      d.innerHTML=`<input type="radio" name="mc" value="${esc(o.v)}"><div><div class="mopt-l">${esc(o.v)}</div>${o.d?`<div class="mopt-d">${esc(o.d)}</div>`:''}</div>`;
+      d.onclick=()=>{d.classList.add('sel');d.querySelector('input').checked=true;};
+      opts.appendChild(d);
+    });
+  }else{opts.innerHTML=`<input class="mtext" id="modal-txt" placeholder="${esc(ch.ph||'')}">`;}
+  document.getElementById('overlay').style.display='block';
+  document.getElementById('modal').style.display='block';
+}
+function closeModal(){document.getElementById('overlay').style.display='none';document.getElementById('modal').style.display='none';pendingModal=null;}
+function saveModal(){
+  if(!pendingModal){closeModal();return;}
+  const radio=document.querySelector('#m-opts input[name=mc]:checked');
+  const ti=document.getElementById('modal-txt');
+  const val=radio?radio.value:(ti?ti.value.trim():'');
+  if(val)choices[pendingModal.key]=val;
+  updateChoicesPanel();closeModal();
+}
+
+// ── SAVE / LOAD ────────────────────────────────────────────────────────────────
+function saveState(){
+  const boosts={};
+  Object.keys(SKILL_ATTR).forEach(sk=>{const el=document.getElementById('b-'+sk);if(el)boosts[sk]=el.value;});
+  const state={
+    vitals:JSON.parse(JSON.stringify(VITALS)),rs:JSON.parse(JSON.stringify(RS)),
+    superUsed,charge,armorSlot,money,sup,malAmmo,malHits,spHP,
+    attrs:{str:document.getElementById('a-str').value,dex:document.getElementById('a-dex').value,con:document.getElementById('a-con').value,int:document.getElementById('a-int').value,wis:document.getElementById('a-wis').value,chr:document.getElementById('a-chr').value},
+    boosts,trainF:{...TRAIN_F},choices:{...choices},
+    statuses:statuses.map(x=>({...x})),perks:perks.map(x=>({...x})),companions:companions.map(x=>({...x})),
+    dynItems:dynItems.map(x=>({...x})),langs:[...langs],resists:[...resists],weaknesses:[...weaknesses],
+  };
+  try{
+    localStorage.setItem('jaren_v1',JSON.stringify(state));
+    alert('State saved to browser storage!');
+  }catch(e){prompt('Copy this state string:',JSON.stringify(state));}
+}
+function loadState(){
+  let raw;try{raw=localStorage.getItem('jaren_v1');}catch(e){}
+  if(!raw)raw=prompt('Paste state string:');
+  if(!raw)return;
+  try{
+    const s=JSON.parse(raw);
+    if(s.vitals)Object.assign(VITALS,s.vitals);
+    if(s.rs)Object.keys(RS).forEach(k=>{if(s.rs[k])Object.assign(RS[k],s.rs[k]);});
+    if(s.superUsed!==undefined)superUsed=s.superUsed;
+    if(s.charge!==undefined)charge=s.charge;
+    if(s.armorSlot)setArmor(s.armorSlot);
+    if(s.money!==undefined){money=s.money;document.getElementById('money-disp').textContent='$'+fmtM(money);}
+    if(s.sup!==undefined){sup=s.sup;document.getElementById('sup-v').textContent=sup;}
+    if(s.malAmmo!==undefined){malAmmo=s.malAmmo;renderMal();}
+    if(s.malHits!==undefined){malHits=s.malHits;renderHits();}
+    if(s.spHP!==undefined){spHP=s.spHP;renderSparrow();}
+    if(s.attrs)Object.keys(s.attrs).forEach(a=>{const el=document.getElementById('a-'+a);if(el)el.value=s.attrs[a];});
+    if(s.boosts)Object.keys(s.boosts).forEach(sk=>{const el=document.getElementById('b-'+sk);if(el)el.value=s.boosts[sk];});
+    if(s.trainF)Object.assign(TRAIN_F,s.trainF);
+    if(s.choices)Object.assign(choices,s.choices);
+    if(s.statuses)statuses=s.statuses.map(x=>({...x}));if(s.companions)companions=s.companions.map(x=>({...x}));
+    if(s.perks)perks=s.perks.map(x=>({...x}));
+    if(s.dynItems)dynItems=s.dynItems.map(x=>({...x}));
+    if(s.langs)langs=[...s.langs];
+    if(s.resists)resists=[...s.resists];
+    if(s.weaknesses)weaknesses=[...s.weaknesses];
+    document.getElementById('super-pip').className='super-pip'+(superUsed?'':' on');
+    initVitals();['heal','rep','adr'].forEach(id=>renderPips(id));
+    buildTraining();updateChoicesPanel();renderCompanions();
+// Restore super charge visual state on load
+(function(){
+  const card=document.getElementById('super-card');
+    const grid=document.getElementById('res-grid');
+    if(superUsed){
+      if(card)card.style.display='none';
+      if(grid)grid.style.gridTemplateColumns='repeat(3,1fr)';
+    }else{
+      if(card){card.style.display='';card.style.opacity='1';}
+      if(grid)grid.style.gridTemplateColumns='repeat(4,1fr)';
+    }
+})();renderStatus();renderPerks();renderLangs();renderInv();renderResist();renderCharge();renderHits();renderSparrow();recalc();
+    alert('State loaded!');
+  }catch(err){alert('Load failed: '+err.message);}
+}
+
+// ── COMPANIONS ────────────────────────────────────────────────────────────────
+let companions=[
+  {id:1,name:'Viktor',role:'Level 6 · STR/CON · Patchwork Fighter',desc:'Permanent 3 damage per turn, offset by burst regeneration every 5 turns. Never been outside before this voyage. Keeps his hand on the wall the whole walk below deck. Interposes himself between Nanachi and any threat without being asked.'},
+  {id:2,name:'Nanachi',role:'Level 2 · Age 7 · Non-Combatant',desc:'Rabbit ears. Exceptional Sense Motive and Awareness despite appearing detached. Will not fight under any circumstances. Slow trust — she faces the wall. If she turns to face the ceiling, something has changed between you.'},
+  {id:3,name:'Benjamin Linus',role:'Level 10 · INT/WIS/CHR · Researcher',desc:'Loses most fights. Wins everything else. Speech +11, Sense Motive +9. Signature: The Long Read — once per encounter, Main Action to study target; next turn +5 to all social rolls vs them and ask DM one true yes/no about their current intent. What he said to the captain: DM only.'},
+];
+function renderCompanions(){
+  const el=document.getElementById('comp-list');if(!el)return;
+  if(!companions.length){el.innerHTML='<div style="font-size:11px;color:#bbb;font-style:italic;padding:4px 0;">No companions</div>';return;}
+  el.innerHTML=companions.map((c,idx)=>`
+    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;padding:9px 0;${idx<companions.length-1?'border-bottom:1px solid var(--warm);':''}align-items:start;">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;">${esc(c.name)}</div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc-d);margin:2px 0 5px;">${esc(c.role)}</div>
+        <div style="font-size:11px;line-height:1.6;color:#555;">${esc(c.desc)}</div>
+      </div>
+      <button onclick="removeCompanion(${c.id})" style="background:none;border:1px solid var(--border);border-radius:3px;font-size:10px;cursor:pointer;color:var(--neg);padding:2px 7px;flex-shrink:0;margin-top:2px;opacity:.6;transition:opacity .12s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.6">✕</button>
+    </div>
+  `).join('');
+}
+function addCompanion(){
+  const name=prompt('Companion name:');if(!name||!name.trim())return;
+  const role=prompt('Role / Level / Stats:','Level ? · ');if(role===null)return;
+  const desc=prompt('Description:','');if(desc===null)return;
+  companions.push({id:Date.now(),name:name.trim(),role:role.trim(),desc:desc.trim()});
+  renderCompanions();
+}
+function removeCompanion(id){
+  if(!confirm('Remove companion?'))return;
+  companions=companions.filter(c=>c.id!==id);renderCompanions();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildTraining();updateChoicesPanel();renderCompanions();
+// Restore super charge visual state on load
+(function(){
+  if(superUsed){
+    const card=document.getElementById('super-card');
+    const grid=document.getElementById('res-grid');
+    if(card)card.style.display='none';
+    if(grid)grid.style.gridTemplateColumns='repeat(3,1fr)';
+  }
+})();
+initVitals();
+['heal','rep','adr'].forEach(id=>renderPips(id));
+renderLangs();renderStatus();renderPerks();renderInv();renderResist();renderCharge();renderHits();renderSparrow();
+recalc();
+</script>
+</body>
+</html>
