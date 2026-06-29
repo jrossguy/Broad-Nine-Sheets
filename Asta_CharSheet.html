@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Asta Staria</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#000000;--bg2:#080808;--bg3:#0d0d0d;--bg4:#141414;
+  --b1:#1e1e1e;--b2:#2a2a2a;
+  --acc:#c0c0c0;--acd:#555555;
+  --red:#cc1111;--redd:#661111;
+  --txt:#ddd;--txt2:#777;--txt3:#3a3a3a;--brt:#fff;
+  --pos:#44aa66;--neg:#dd4444;--blue:#3388cc;--yel:#bb8811;
+  --fo:'Orbitron',monospace;--fm:'Share Tech Mono',monospace;--fr:'Rajdhani',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:#000;color:var(--txt);font-family:var(--fr);min-height:100vh;position:relative;overflow-x:hidden;}
+
+/* PULSING BACKGROUND */
+#bg-l1{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(-55deg,transparent 0,transparent 28px,rgba(160,160,160,.07) 29px,rgba(160,160,160,.07) 30px);
+  animation:bgp 3.5s ease-in-out infinite;}
+#bg-l2{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(35deg,transparent 0,transparent 48px,rgba(160,160,160,.04) 49px,rgba(160,160,160,.04) 50px);
+  animation:bgp 5.5s ease-in-out infinite reverse;}
+@keyframes bgp{0%,100%{opacity:.35}50%{opacity:1}}
+
+.wrap{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:10px 12px;}
+
+/* ANIMATIONS */
+@keyframes acc-flash{0%{opacity:0}20%{opacity:1;box-shadow:inset 0 0 80px rgba(200,200,200,.08)}100%{opacity:0}}
+@keyframes ring-bloom{0%,100%{box-shadow:0 0 8px var(--acd)}50%{box-shadow:0 0 30px var(--acc),0 0 60px var(--acd)}}
+@keyframes red-burst{0%{opacity:0}20%{opacity:1;box-shadow:inset 0 0 80px rgba(204,17,17,.12)}100%{opacity:0}}
+@keyframes red-ring-bloom{0%,100%{box-shadow:0 0 8px var(--redd)}50%{box-shadow:0 0 30px var(--red),0 0 60px var(--redd)}}
+@keyframes sp-burst{0%{transform:scale(.2);opacity:1}80%{transform:scale(1.8);opacity:.4}100%{transform:scale(2.2);opacity:0}}
+@keyframes sp-wave{0%{transform:scale(.1);opacity:.9;border-width:6px}100%{transform:scale(3.5);opacity:0;border-width:0}}
+@keyframes sp-tint{0%{opacity:0}25%{opacity:.25}100%{opacity:0}}
+@keyframes pip-pop{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+@keyframes blink-r{0%,100%{box-shadow:0 0 4px var(--redd)}50%{box-shadow:0 0 16px var(--red),0 0 32px var(--redd)}}
+@keyframes wing-in{from{transform:translateX(-120px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes wing-out{from{transform:translateX(0);opacity:1}to{transform:translateX(-120px);opacity:0}}
+@keyframes sword-rise{0%{transform:translateY(60px);opacity:0}40%{opacity:1}100%{transform:translateY(-20px);opacity:0}}
+@keyframes book-open{0%{transform:scaleX(1)}50%{transform:scaleX(.2)}100%{transform:scaleX(.2)}}
+@keyframes fade-out{0%{opacity:1}70%{opacity:1}100%{opacity:0}}
+
+#anim-pri{position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:0;}
+#anim-pri.fire{animation:acc-flash .6s ease-out forwards;}
+#anim-red{position:fixed;inset:0;pointer-events:none;z-index:1000;opacity:0;}
+#anim-red.fire{animation:red-burst .6s ease-out forwards;}
+#anim-burst{position:fixed;left:50%;top:50%;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;background:radial-gradient(circle,var(--red) 0%,var(--redd) 35%,transparent 70%);pointer-events:none;z-index:1001;opacity:0;}
+#anim-burst.fire{animation:sp-burst .8s ease-out forwards;}
+#anim-wave{position:fixed;left:50%;top:50%;width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:50%;border:5px solid var(--red);pointer-events:none;z-index:1001;opacity:0;}
+#anim-wave.fire{animation:sp-wave .8s ease-out forwards;}
+#anim-tint{position:fixed;inset:0;background:var(--redd);pointer-events:none;z-index:1000;opacity:0;}
+#anim-tint.fire{animation:sp-tint .8s ease-out forwards;}
+
+/* SWORD DRAW ANIMATION */
+#sword-anim{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:3000;opacity:0;}
+#sword-anim.fire{animation:fade-out 1.2s ease-out forwards;}
+#sword-anim .sword-svg{animation:sword-rise 1.2s ease-out forwards;}
+
+/* WING OVERLAY */
+#wing-overlay{position:fixed;left:0;top:50%;transform:translateY(-50%);width:160px;height:70vh;pointer-events:none;z-index:15;display:none;}
+#wing-overlay.show{display:block;animation:wing-in .5s ease-out forwards;}
+#wing-overlay.hide{display:block;animation:wing-out .4s ease-in forwards;}
+
+/* TOOLTIP */
+#tt{position:fixed;background:var(--bg4);border:1px solid #333;border-radius:3px;padding:9px 12px;max-width:260px;z-index:2000;pointer-events:none;opacity:0;transition:opacity .15s;box-shadow:0 4px 20px rgba(0,0,0,.8);}
+#tt.show{opacity:1;}
+#tt-tier{font-family:var(--fo);font-size:8px;letter-spacing:2px;color:var(--acc);margin-bottom:4px;}
+#tt-body{font-family:var(--fr);font-size:11px;color:var(--txt2);line-height:1.5;}
+
+/* PANELS */
+.panel{background:var(--bg3);border:1px solid var(--b1);border-radius:2px;position:relative;overflow:hidden;}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent);}
+.panel.red-panel::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
+.ptitle{font-family:var(--fo);font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--txt2);padding:7px 10px 6px;border-bottom:1px solid var(--b1);}
+
+/* HEADER */
+.hdr{clip-path:polygon(0 0,calc(100% - 24px) 0,100% 24px,100% 100%,24px 100%,0 100%);background:var(--bg3);border:1px solid var(--b1);margin-bottom:7px;position:relative;}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--acc),var(--red),var(--acc));z-index:1;}
+.hdr-inner{display:grid;grid-template-columns:106px 1fr;gap:14px;padding:12px 14px 9px;}
+.portrait{width:96px;height:96px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);border:1px solid var(--acc);overflow:hidden;background:#111;flex-shrink:0;}
+.portrait img{width:100%;height:100%;object-fit:cover;}
+.hdr-info{display:flex;flex-direction:column;gap:2px;}
+.char-name{font-family:var(--fo);font-size:20px;font-weight:900;color:var(--brt);letter-spacing:2px;text-shadow:0 0 20px rgba(200,200,200,.25);line-height:1;}
+.char-sub{font-family:var(--fr);font-size:10px;color:var(--red);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;}
+.meta-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.mc{display:flex;flex-direction:column;gap:0;align-items:center;}
+.ml{font-family:var(--fo);font-size:7px;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;}
+.mv{font-family:var(--fm);font-size:13px;color:var(--txt);}
+.mv input{background:transparent;border:none;font-family:var(--fm);font-size:13px;color:var(--txt);width:34px;text-align:center;outline:none;}
+.psub{font-family:var(--fr);font-size:9px;color:var(--txt3);margin-top:2px;}
+.badge-row{display:flex;gap:5px;flex-wrap:wrap;align-items:center;padding:6px 12px;border-top:1px solid var(--b1);}
+.bsep{font-family:var(--fo);font-size:7px;color:var(--txt3);letter-spacing:2px;}
+.badge{font-family:var(--fo);font-size:7px;letter-spacing:1px;padding:2px 7px;border-radius:2px;cursor:pointer;display:flex;align-items:center;gap:3px;}
+.badge.res{background:rgba(68,170,102,.12);border:1px solid var(--pos);color:var(--pos);}
+.badge.weak{background:rgba(221,68,68,.12);border:1px solid var(--neg);color:var(--neg);}
+.bi{background:var(--bg2);border:1px solid var(--b1);color:var(--txt);font-family:var(--fr);font-size:10px;padding:2px 6px;border-radius:2px;outline:none;width:90px;}
+.smbtn{background:transparent;border:1px solid var(--b2);color:var(--txt2);font-family:var(--fo);font-size:7px;letter-spacing:1px;padding:2px 7px;cursor:pointer;border-radius:2px;transition:all .2s;}
+.smbtn:hover{border-color:var(--acc);color:var(--acc);}
+
+/* STATS BAR */
+.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:5px;}
+.sc{background:var(--bg3);border:1px solid var(--b1);padding:6px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;}
+.sc:nth-child(1)::before{background:var(--pos);}
+.sc:nth-child(2)::before{background:var(--blue);}
+.sc:nth-child(3)::before{background:var(--acc);}
+.sc:nth-child(4)::before{background:var(--yel);}
+.sc:nth-child(5)::before{background:var(--txt3);}
+.slbl{font-family:var(--fo);font-size:7px;letter-spacing:2px;color:var(--txt2);text-transform:uppercase;}
+.srow{display:flex;align-items:center;gap:3px;}
+.adj{background:var(--bg2);border:1px solid var(--b2);color:var(--txt2);font-family:var(--fm);font-size:11px;width:18px;height:18px;cursor:pointer;border-radius:2px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.adj:hover{border-color:var(--acc);color:var(--acc);}
+.scur{font-family:var(--fm);font-size:15px;color:var(--brt);background:transparent;border:none;width:42px;text-align:center;outline:none;}
+.ssep{font-family:var(--fm);font-size:11px;color:var(--txt3);}
+.smax{font-family:var(--fm);font-size:11px;color:var(--txt2);}
+.rst{font-family:var(--fo);font-size:7px;background:transparent;border:1px solid var(--b2);color:var(--txt3);padding:1px 4px;cursor:pointer;border-radius:2px;transition:all .15s;margin-top:1px;}
+.rst:hover{border-color:var(--acc);color:var(--acc);}
+.snote{font-family:var(--fo);font-size:6px;color:var(--txt3);letter-spacing:1px;}
+.smax-edit{font-family:var(--fm);font-size:11px;color:var(--txt2);background:transparent;border:none;border-bottom:1px solid var(--txt3);width:36px;text-align:center;outline:none;cursor:text;}
+.smax-edit:focus{border-bottom-color:var(--acc);color:var(--brt);}
+
+/* COMBAT BAR */
+.cbt-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:7px;}
+.cv{background:var(--bg3);border:1px solid var(--b1);clip-path:polygon(5px 0%,calc(100% - 5px) 0%,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0% calc(100% - 5px),0% 5px);padding:7px 3px;display:flex;flex-direction:column;align-items:center;gap:1px;}
+.cvlbl{font-family:var(--fo);font-size:7px;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;}
+.cvval{font-family:var(--fm);font-size:20px;font-weight:bold;}
+.p{color:var(--pos);}.n{color:var(--neg);}.z{color:var(--txt2);}
+
+/* MAIN GRID */
+.main-grid{display:grid;grid-template-columns:272px 1fr 272px;gap:6px;margin-bottom:6px;}
+.lc,.rc{display:flex;flex-direction:column;gap:6px;}
+.cc{display:flex;flex-direction:column;gap:6px;}
+
+/* ATTRS */
+.arow{display:grid;grid-template-columns:34px 48px 46px;align-items:center;padding:4px 10px;border-bottom:1px solid var(--bg4);gap:3px;}
+.arow:last-child{border-bottom:none;}
+.an{font-family:var(--fo);font-size:8px;letter-spacing:2px;color:var(--txt2);}
+.as{background:var(--bg2);border:1px solid var(--b2);color:var(--brt);font-family:var(--fm);font-size:15px;width:44px;text-align:center;padding:2px;outline:none;border-radius:2px;transition:border-color .15s;}
+.as:focus{border-color:var(--acc);}
+.am{font-family:var(--fm);font-size:13px;text-align:right;}
+
+/* SKILLS */
+.skrow{display:grid;grid-template-columns:28px 1fr 30px 76px 38px;align-items:center;padding:2px 7px;border-bottom:1px solid rgba(255,255,255,.025);gap:3px;}
+.sktag{background:var(--bg2);font-family:var(--fm);font-size:8px;color:var(--txt3);padding:1px 2px;text-align:center;border-radius:2px;}
+.skname{font-family:var(--fr);font-size:10px;color:var(--txt2);}
+.sknote{font-size:8px;color:var(--txt3);}
+.sk-hdr{display:grid;grid-template-columns:26px 1fr 38px 60px 40px;align-items:center;padding:2px 6px 3px;gap:2px;border-bottom:1px solid var(--b2);margin-bottom:1px;}
+.sk-hdr-lbl{font-family:var(--fo);font-size:6px;letter-spacing:2px;color:var(--txt3);text-align:center;}
+.sk-hdr-mag{font-family:var(--fo);font-size:6px;letter-spacing:2px;color:var(--sp);text-align:center;background:rgba(114,50,190,.08);border-left:1px solid rgba(114,50,190,.2);border-right:1px solid rgba(114,50,190,.2);padding:1px 0;border-radius:2px;}
+.skmag{display:flex;align-items:center;gap:1px;background:rgba(114,50,190,.07);border-left:1px solid rgba(114,50,190,.18);border-right:1px solid rgba(114,50,190,.18);padding:0 2px;border-radius:2px;justify-content:center;}
+.mag-adj{background:transparent;border:1px solid rgba(114,50,190,.25);color:var(--sp);font-family:var(--fm);font-size:10px;width:14px;height:14px;cursor:pointer;border-radius:1px;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;transition:all .15s;flex-shrink:0;}
+.mag-adj:hover{background:rgba(114,50,190,.2);border-color:var(--sp);}
+.mag-val{font-family:var(--fm);font-size:11px;color:var(--sp);min-width:18px;text-align:center;}
+.skboost{background:transparent;border:1px solid var(--bg4);color:var(--txt2);font-family:var(--fm);font-size:9px;width:26px;text-align:center;outline:none;padding:1px;border-radius:2px;}
+.skboost:focus{border-color:var(--acc);}
+.sktot{font-family:var(--fm);font-size:12px;text-align:right;width:40px;}
+
+/* TRAINING */
+.tsec{padding:0 10px 7px;border-bottom:1px solid var(--b1);}
+.tsec:last-child{border-bottom:none;}
+.thdr{display:flex;justify-content:space-between;align-items:center;padding:6px 0 4px;}
+.tan{font-family:var(--fo);font-size:8px;letter-spacing:2px;color:var(--txt2);}
+.tcnt{font-family:var(--fm);font-size:10px;color:var(--txt3);}
+.tpips{display:flex;gap:2px;flex-wrap:wrap;}
+.tp{width:16px;height:16px;border:1px solid var(--b2);background:var(--bg2);cursor:pointer;border-radius:2px;transition:all .15s;}
+.tp:hover{border-color:var(--acd);}
+.tp.on{background:var(--acd);border-color:var(--acc);box-shadow:0 0 4px var(--acd);}
+.tp.on:hover{background:var(--acc);}
+.tchoices{margin-top:4px;}
+.tcrow{display:flex;gap:4px;align-items:center;padding:1px 0;font-family:var(--fr);font-size:9px;color:var(--txt3);}
+.tclbl{color:var(--acc);font-family:var(--fo);font-size:6px;}
+.tcinp{background:var(--bg2);border:1px solid var(--b1);color:var(--txt);font-family:var(--fr);font-size:9px;padding:2px 5px;outline:none;border-radius:2px;width:120px;}
+
+/* POOL PANELS */
+.pool-panel{padding:10px 10px 8px;}
+.pool-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.pool-title{font-family:var(--fo);font-size:8px;letter-spacing:3px;color:var(--txt2);}
+.pool-row{display:flex;gap:10px;align-items:flex-start;}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.ring-outer{width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;}
+.ring-outer.acc-ring{box-shadow:0 0 12px var(--acd),0 0 3px rgba(180,180,180,.2);}
+.ring-outer.red-ring{box-shadow:0 0 12px var(--redd),0 0 3px rgba(204,17,17,.2);}
+.ring-outer.bloom{animation:ring-bloom .5s ease-out;}
+.ring-outer.red-bloom{animation:red-ring-bloom .5s ease-out;}
+.ring-inner{width:82px;height:82px;border-radius:50%;background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;}
+.ring-n{font-family:var(--fm);font-size:22px;color:var(--brt);line-height:1;}
+.ring-mx{font-family:var(--fm);font-size:9px;color:var(--txt3);}
+.ring-lb{font-family:var(--fo);font-size:6px;letter-spacing:2px;margin-top:1px;}
+.acc-ring .ring-lb{color:var(--acc);}
+.red-ring .ring-lb{color:var(--red);}
+.pool-bar{width:100%;height:3px;background:var(--bg2);border-radius:2px;margin:6px 0;overflow:hidden;}
+.pool-fill-acc{height:100%;background:linear-gradient(90deg,var(--acd),var(--acc));border-radius:2px;transition:width .3s;}
+.pool-fill-red{height:100%;background:linear-gradient(90deg,var(--redd),var(--red));border-radius:2px;transition:width .3s;}
+.pool-ctl{display:flex;gap:3px;align-items:center;flex-wrap:wrap;justify-content:center;}
+.pb{background:var(--bg2);border:1px solid var(--b2);color:var(--txt2);font-family:var(--fm);font-size:10px;padding:3px 6px;cursor:pointer;border-radius:2px;transition:all .15s;}
+.pb:hover{border-color:var(--acc);color:var(--acc);}
+.pb.red-pb:hover{border-color:var(--red);color:var(--red);}
+.pool-inp{background:var(--bg2);border:1px solid var(--b1);color:var(--brt);font-family:var(--fm);font-size:13px;width:46px;text-align:center;outline:none;padding:2px;border-radius:2px;}
+.pool-full{font-family:var(--fo);font-size:7px;letter-spacing:2px;background:transparent;border:1px solid;padding:4px 10px;cursor:pointer;border-radius:2px;transition:all .2s;margin-top:4px;width:100%;}
+.acc-full{border-color:var(--acd);color:var(--acc);}
+.acc-full:hover{background:var(--acd);}
+.red-full{border-color:var(--redd);color:var(--red);}
+.red-full:hover{background:var(--redd);}
+.pool-right{flex:1;display:flex;flex-direction:column;gap:4px;}
+
+/* ABILITY CARDS */
+.ab-card{background:var(--bg2);border:1px solid var(--b1);border-radius:2px;padding:6px;display:flex;flex-direction:column;gap:3px;}
+.ab-card.spab{border-color:var(--redd);}
+.ab-name{font-family:var(--fo);font-size:7px;letter-spacing:1px;color:var(--acc);text-transform:uppercase;}
+.ab-card.spab .ab-name{color:var(--red);}
+.ab-desc{font-family:var(--fr);font-size:9px;color:var(--txt3);line-height:1.35;flex:1;}
+.ab-foot{display:flex;gap:3px;align-items:center;}
+.ab-cost{font-family:var(--fm);font-size:9px;color:var(--txt2);background:var(--bg3);border:1px solid var(--b1);width:32px;text-align:center;padding:1px;outline:none;border-radius:2px;}
+.ab-use{flex:1;background:var(--acd);border:1px solid var(--acc);color:var(--brt);font-family:var(--fo);font-size:6px;letter-spacing:1px;padding:3px 4px;cursor:pointer;border-radius:2px;transition:all .15s;}
+.ab-use:hover:not(:disabled){background:var(--acc);}
+.ab-use:disabled{opacity:.25;cursor:not-allowed;border-color:var(--b1);}
+.ab-card.spab .ab-use{background:var(--redd);border-color:var(--red);}
+.ab-card.spab .ab-use:hover:not(:disabled){background:var(--red);}
+.ab-add{padding:4px 10px;display:flex;gap:4px;align-items:center;}
+.ai{background:var(--bg2);border:1px solid var(--b1);color:var(--txt);font-family:var(--fr);font-size:10px;padding:2px 6px;outline:none;border-radius:2px;}
+.add-btn{background:transparent;border:1px solid var(--b2);color:var(--txt2);font-family:var(--fo);font-size:7px;letter-spacing:1px;padding:3px 8px;cursor:pointer;border-radius:2px;transition:all .2s;}
+.add-btn:hover{border-color:var(--acc);color:var(--acc);}
+.rmbtn{background:transparent;border:none;color:var(--txt3);cursor:pointer;font-size:11px;padding:0 1px;transition:color .15s;flex-shrink:0;}
+.rmbtn:hover{color:var(--neg);}
+
+/* WINGED FORM TOGGLE */
+.pact-state{padding:7px 10px;border-top:1px solid var(--b1);display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.ps-blk{display:flex;flex-direction:column;gap:3px;}
+.ps-lbl{font-family:var(--fo);font-size:6px;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;}
+.tog-btn{background:var(--bg2);border:1px solid var(--b2);color:var(--txt2);font-family:var(--fo);font-size:7px;letter-spacing:1px;padding:4px 10px;cursor:pointer;border-radius:2px;transition:all .2s;}
+
+/* LEVEL TABLE */
+.lvl-table{width:100%;border-collapse:collapse;font-family:var(--fr);font-size:10px;}
+.lvl-table th{font-family:var(--fo);font-size:6px;letter-spacing:2px;color:var(--txt3);padding:4px 7px;border-bottom:1px solid var(--b1);text-align:left;}
+.lvl-table td{padding:2px 7px;color:var(--txt2);border-bottom:1px solid rgba(255,255,255,.02);}
+.lvl-table td:first-child{font-family:var(--fm);color:var(--txt3);}
+.lvl-table tr.cur td{background:rgba(200,200,200,.06);color:var(--txt);}
+.lvl-table tr.cur td:first-child{color:var(--acc);font-weight:bold;}
+.lvl-table tr.nxt td{background:rgba(204,17,17,.04);}
+
+/* CHOICES */
+.ci{padding:7px 10px;min-height:32px;}
+.cline{padding:1px 0;color:var(--txt2);font-family:var(--fr);font-size:9px;}
+
+/* RESOURCES */
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:8px 10px;}
+.res-blk{background:var(--bg2);border:1px solid var(--b1);border-radius:2px;padding:7px;}
+.res-lbl{font-family:var(--fo);font-size:6px;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;margin-bottom:4px;}
+.res-pips{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:3px;}
+.rp{width:16px;height:16px;border-radius:50%;border:2px solid;cursor:pointer;transition:all .15s;}
+.rp.hp{border-color:var(--pos);}.rp.hp.on{background:var(--pos);box-shadow:0 0 6px var(--pos);}
+.rp.kit{border-color:var(--blue);}.rp.kit.on{background:var(--blue);box-shadow:0 0 6px var(--blue);}
+.rp.adr{border-color:var(--yel);}.rp.adr.on{background:var(--yel);box-shadow:0 0 6px var(--yel);}
+.rp.sup{border-color:var(--red);}.rp.sup.on{background:var(--red);box-shadow:0 0 6px var(--red);animation:blink-r 1.5s ease-in-out infinite;}
+.res-cnt{font-family:var(--fm);font-size:10px;color:var(--txt3);}
+
+/* LOWER */
+.lower-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;}
+.ll,.rl{display:flex;flex-direction:column;gap:6px;}
+
+/* WEAPONS */
+.wpn-card{display:flex;gap:7px;padding:6px 9px;border-bottom:1px solid rgba(255,255,255,.025);align-items:flex-start;}
+.wpn-acc{width:2px;flex-shrink:0;border-radius:1px;align-self:stretch;min-height:26px;}
+.wpn-info{flex:1;}
+.wpn-name{font-family:var(--fo);font-size:8px;letter-spacing:1px;color:var(--txt);}
+.wpn-dmg{font-family:var(--fm);font-size:13px;color:var(--brt);}
+.wpn-notes{font-family:var(--fr);font-size:9px;color:var(--txt3);margin-top:1px;}
+.wpn-add{padding:5px 9px;display:flex;gap:4px;}
+.wpn-sel{background:var(--bg2);border:1px solid var(--b1);color:var(--txt2);font-family:var(--fr);font-size:10px;padding:2px 4px;outline:none;border-radius:2px;}
+
+/* PERKS */
+.perk-row{display:grid;grid-template-columns:2px 1fr auto;gap:7px;padding:5px 9px;align-items:start;border-bottom:1px solid rgba(255,255,255,.025);}
+.pk-acc{border-radius:1px;align-self:stretch;min-height:18px;}
+.pk-body{display:flex;flex-direction:column;gap:1px;}
+.pk-name{font-family:var(--fo);font-size:7px;letter-spacing:1px;text-transform:uppercase;}
+.pk-type{font-family:var(--fr);font-size:8px;color:var(--txt3);background:var(--bg2);padding:1px 4px;border-radius:2px;display:inline-block;margin-bottom:1px;}
+.pk-desc{font-family:var(--fr);font-size:9px;color:var(--txt2);line-height:1.35;}
+.pk-desc strong{color:var(--acc);font-weight:500;}
+.perk-add{padding:5px 9px;display:flex;gap:4px;}
+
+/* ACTIONS */
+.act-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;}
+.act-panel{padding-bottom:6px;}
+.act-item{display:flex;gap:6px;padding:4px 9px;border-bottom:1px solid rgba(255,255,255,.02);align-items:baseline;}
+.act-mrk{font-size:10px;color:var(--acc);flex-shrink:0;}
+.act-txt{font-family:var(--fr);font-size:10px;color:var(--txt2);line-height:1.35;flex:1;}
+.act-txt strong{color:var(--txt);font-weight:600;}
+.roll{font-family:var(--fm);font-size:10px;color:var(--acc);}
+.act-add{padding:5px 9px;display:flex;gap:4px;}
+.act-add input{flex:1;background:var(--bg2);border:1px solid var(--b1);color:var(--txt);font-family:var(--fr);font-size:10px;padding:2px 6px;outline:none;border-radius:2px;}
+
+/* STATUS */
+.sts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:7px 10px;}
+.sts-card{background:var(--bg2);border-radius:2px;padding:5px 7px;display:flex;flex-direction:column;gap:1px;border-left:2px solid var(--b2);}
+.sts-card.neg{border-left-color:var(--neg);}
+.sts-card.pos{border-left-color:var(--pos);}
+.sts-card.neu{border-left-color:var(--yel);}
+.sts-name{font-family:var(--fo);font-size:7px;letter-spacing:1px;color:var(--txt);}
+.sts-dur{font-family:var(--fm);font-size:9px;color:var(--txt3);}
+.sts-add{padding:5px 10px;display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
+.sts-add input,.sts-add select{background:var(--bg2);border:1px solid var(--b1);color:var(--txt);font-family:var(--fr);font-size:10px;padding:2px 5px;outline:none;border-radius:2px;}
+
+/* INVENTORY */
+.money-row{padding:6px 10px;display:flex;gap:7px;align-items:center;border-bottom:1px solid var(--b1);}
+.mlbl{font-family:var(--fo);font-size:7px;letter-spacing:2px;color:var(--txt3);}
+.minp{background:transparent;border:1px solid var(--b1);color:var(--yel);font-family:var(--fm);font-size:13px;padding:2px 7px;outline:none;border-radius:2px;width:140px;}
+.minp:focus{border-color:var(--yel);}
+.ltag{font-family:var(--fr);font-size:9px;color:var(--txt3);margin-left:auto;}
+.inv-item{display:grid;grid-template-columns:1fr 65px auto;align-items:center;gap:7px;padding:3px 10px;border-bottom:1px solid rgba(255,255,255,.018);}
+.inv-item.quest{border-left:2px solid var(--acc);}
+.inv-name{font-family:var(--fr);font-size:10px;color:var(--txt2);}
+.inv-tag{font-family:var(--fm);font-size:8px;color:var(--txt3);text-align:right;}
+.inv-add{padding:4px 10px;display:flex;gap:4px;}
+.inv-add input{background:var(--bg2);border:1px solid var(--b1);color:var(--txt);font-family:var(--fr);font-size:10px;padding:2px 6px;outline:none;border-radius:2px;}
+.inv-notes{width:calc(100% - 20px);margin:0 10px 8px;background:var(--bg2);border:1px solid var(--b1);color:var(--txt2);font-family:var(--fr);font-size:10px;padding:6px 9px;outline:none;resize:vertical;min-height:52px;border-radius:2px;}
+
+.sk-colhdr{display:grid;grid-template-columns:26px 1fr 38px 60px 40px;align-items:center;padding:2px 7px 3px;border-bottom:1px solid var(--b2);background:var(--bg4);gap:3px;}
+.sk-hlab{font-family:var(--fo);font-size:6px;letter-spacing:2px;color:var(--txt3);text-align:center;text-transform:uppercase;}
+.sk-mag-cell{display:flex;align-items:center;justify-content:center;gap:2px;padding:1px 4px;background:rgba(160,120,40,.07);border-left:1px solid rgba(160,120,40,.18);border-right:1px solid rgba(160,120,40,.18);}
+.sk-mag-btn{background:transparent;border:1px solid rgba(160,120,40,.28);color:rgba(190,150,50,.8);font-family:var(--fm);font-size:11px;width:15px;height:15px;cursor:pointer;border-radius:1px;display:flex;align-items:center;justify-content:center;line-height:1;padding:0;transition:all .15s;flex-shrink:0;}
+.sk-mag-btn:hover{border-color:var(--yel);color:var(--yel);background:rgba(160,120,40,.15);}
+.sk-mag-n{font-family:var(--fm);font-size:12px;color:var(--yel);min-width:18px;text-align:center;}
+
+.sess-notes{width:100%;background:var(--bg2);border:1px solid var(--b1);color:var(--txt2);font-family:var(--fr);font-size:11px;padding:8px 10px;outline:none;resize:vertical;min-height:100px;border-radius:0;}
+
+/* SAVE BAR */
+.save-bar{display:flex;gap:7px;align-items:center;padding:8px 0;}
+.savebtn{background:transparent;border:1px solid var(--pos);color:var(--pos);font-family:var(--fo);font-size:8px;letter-spacing:2px;padding:7px 18px;cursor:pointer;border-radius:2px;transition:all .2s;}
+.savebtn:hover{background:rgba(68,170,102,.1);}
+.loadbtn{background:transparent;border:1px solid var(--blue);color:var(--blue);font-family:var(--fo);font-size:8px;letter-spacing:2px;padding:7px 18px;cursor:pointer;border-radius:2px;transition:all .2s;}
+.loadbtn:hover{background:rgba(51,136,204,.1);}
+.save-st{font-family:var(--fm);font-size:9px;color:var(--txt3);margin-left:auto;}
+
+/* COLLAPSIBLE */
+.ctitle{cursor:pointer;user-select:none;}
+.ctitle::after{content:' ▼';font-size:6px;color:var(--txt3);}
+.ctitle.coll::after{content:' ▶';}
+.cbody.coll{display:none;}
+
+/* RELATIONSHIPS */
+.rel-row{display:grid;grid-template-columns:1fr 76px 1fr auto;gap:5px;padding:3px 10px;align-items:center;border-bottom:1px solid rgba(255,255,255,.018);}
+.rel-name{font-family:var(--fr);font-size:10px;color:var(--txt2);}
+.rel-disp{font-family:var(--fm);font-size:8px;color:var(--red);background:var(--bg2);padding:1px 4px;border-radius:2px;text-align:center;}
+.rel-spec{font-family:var(--fr);font-size:9px;color:var(--txt3);}
+.rel-add{padding:5px 10px;display:flex;gap:4px;}
+</style>
+</head>
+<body>
+<div id="bg-l1"></div>
+<div id="bg-l2"></div>
+<div id="anim-pri"></div>
+<div id="anim-red"></div>
+<div id="anim-burst"></div>
+<div id="anim-wave"></div>
+<div id="anim-tint"></div>
+
+<!-- WING OVERLAY -->
+<div id="wing-overlay">
+  <svg viewBox="0 0 160 600" style="width:100%;height:100%;filter:drop-shadow(2px 0 8px rgba(204,17,17,.3))">
+    <path d="M155,300 Q80,180 100,80 Q120,20 155,0 Q130,60 120,110 Q155,80 155,160 Q125,140 108,210 Q148,185 148,280 Q118,255 100,330 Q145,305 138,410 Q112,375 94,455 Q138,435 128,540 Q100,490 72,565 Q96,520 60,565 Q80,515 44,550 Q62,492 22,525 Q42,465 5,495 Q24,435 0,445 L0,600 L160,600 Z"
+      fill="rgba(10,10,10,.92)" stroke="rgba(100,100,100,.2)" stroke-width="1"/>
+    <path d="M120,120 Q90,140 80,200 M130,220 Q100,235 88,300 M125,330 Q95,345 83,410" stroke="rgba(60,60,60,.4)" stroke-width="1" fill="none"/>
+  </svg>
+</div>
+
+<!-- SWORD DRAW -->
+<div id="sword-anim">
+  <svg class="sword-svg" viewBox="0 0 200 260" width="200" height="260" style="filter:drop-shadow(0 0 12px rgba(180,180,180,.4))">
+    <rect x="60" y="160" width="80" height="90" rx="4" fill="#111" stroke="#333" stroke-width="1.5"/>
+    <rect x="75" y="165" width="25" height="80" fill="#1a1a1a" rx="2"/>
+    <rect x="106" y="165" width="25" height="80" fill="#1a1a1a" rx="2"/>
+    <rect x="55" y="158" width="90" height="8" rx="2" fill="#222" stroke="#444" stroke-width="1"/>
+    <rect x="95" y="60" width="10" height="100" rx="2" fill="#888"/>
+    <polygon points="100,10 95,60 105,60" fill="#bbb"/>
+    <rect x="82" y="108" width="36" height="6" rx="2" fill="#555"/>
+    <line x1="95" y1="60" x2="105" y2="60" stroke="#fff" stroke-width="1" opacity=".4"/>
+  </svg>
+</div>
+
+<!-- TOOLTIP -->
+<div id="tt"><div id="tt-tier"></div><div id="tt-body"></div></div>
+
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="portrait"><img id="portrait-img" src="" alt="Asta"></div>
+    <div class="hdr-info">
+      <div class="char-name">ASTA STARIA</div>
+      <div class="char-sub">Anti-Nen Swordsman &#xB7; Pact: Sparda &#xB7; Sgt.</div>
+      <div class="meta-row">
+        <div class="mc"><div class="ml">LEVEL</div><div class="mv"><input type="number" id="level-i" value="5" min="1" max="30" oninput="onLevel()"></div></div>
+        <div class="mc"><div class="ml">AGE</div><div class="mv"><input type="text" id="char-age" value="23" style="background:transparent;border:none;border-bottom:1px solid var(--txt3);width:32px;font-family:var(--fm);font-size:13px;color:var(--txt);text-align:center;outline:none;" oninput="S.age=this.value"></div></div>
+        <div class="mc"><div class="ml">MOVEMENT</div><div class="mv" id="hdr-mv">5</div></div>
+        <div class="mc"><div class="ml">DICE</div><div class="mv" id="hdr-dt">Std</div></div>
+        <div class="mc"><div class="ml">ATTACKS</div><div class="mv" id="hdr-atk">1+1B</div></div>
+        <div class="mc"><div class="ml">BOUNTY</div><div class="mv"><input type="text" id="char-bounty" value="—" style="background:transparent;border:none;border-bottom:1px solid var(--txt3);width:52px;font-family:var(--fm);font-size:13px;color:var(--txt);text-align:center;outline:none;" oninput="S.bounty=this.value"></div></div>
+      </div>
+      <div class="psub">Player: Devon Worthington &#xB7; Federation Sgt.</div>
+    </div>
+  </div>
+  <div class="badge-row">
+    <div class="bsep">RES</div>
+    <div id="res-badges" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+    <div class="bsep">WEAK</div>
+    <div id="weak-badges" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+    <input class="bi" id="new-res" placeholder="Resistance..." style="width:88px">
+    <button class="smbtn" onclick="addBadge('res')">+ RES</button>
+    <input class="bi" id="new-weak" placeholder="Weakness..." style="width:88px">
+    <button class="smbtn" onclick="addBadge('weak')">+ WEAK</button>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="sc"><div class="slbl">Hit Points</div>
+    <div class="srow"><button class="adj" onclick="adj('hp',-1)">&#8722;</button><input class="scur" id="hp-c" type="number" value="8"><span class="ssep">/</span><input class="smax-edit" id="hp-mx" type="number" value="34" title="Max HP (editable — auto-calculated but can override)"><button class="adj" onclick="adj('hp',1)">+</button></div></div>
+  <div class="sc"><div class="slbl">Armor HP</div>
+    <div class="srow"><button class="adj" onclick="adj('ar',-1)">&#8722;</button><input class="scur" id="ar-c" type="number" value="5"><span class="ssep">/</span><input class="smax-edit" id="ar-mx" type="number" value="5" title="Max Armor HP (editable)"><button class="adj" onclick="adj('ar',1)">+</button></div>
+    <div class="snote" style="display:flex;gap:3px;align-items:center">Armor: <input id="armor-lbs" type="number" value="10" title="Armor weight in Lbs" style="background:transparent;border:none;border-bottom:1px solid var(--txt3);width:28px;font-family:var(--fm);font-size:9px;color:var(--txt2);text-align:center;outline:none;" oninput="S.armorLbs=parseInt(this.value)||0"> Lbs</div></div>
+  <div class="sc"><div class="slbl">Movement</div>
+    <div class="srow"><button class="adj" onclick="adj('mv',-1)">&#8722;</button><input class="scur" id="mv-c" type="number" value="5"><span class="ssep">/</span><input class="smax-edit" id="mv-mx" type="number" value="5" title="Max Movement (editable — auto-calculated but can override)"><button class="adj" onclick="adj('mv',1)">+</button></div>
+    <button class="rst" onclick="rstMv()">&#x21BA; RESET</button></div>
+  <div class="sc"><div class="slbl">Supplies</div>
+    <div class="srow"><button class="adj" onclick="adj('sup',-1)">&#8722;</button><input class="scur" id="sup-c" type="number" value="10"><span class="ssep">/</span><input class="smax-edit" id="sup-mx" type="number" value="100" title="Max Supplies (editable)"><button class="adj" onclick="adj('sup',1)">+</button></div>
+    <div class="snote" id="sup-lbs">2 Lbs used</div></div>
+  <div class="sc"><div class="slbl">Carry Weight</div>
+    <div class="srow"><button class="adj" onclick="adj('cw',-1)">&#8722;</button><input class="scur" id="cw-c" type="number" value="108"><span class="ssep">/</span><input class="smax-edit" id="cw-mx" type="number" value="110" title="Max Carry Weight (editable)"><button class="adj" onclick="adj('cw',1)">+</button></div>
+    <button class="rst" onclick="calcCW()" title="Auto-calculate from inventory+weapons+armor+supplies">&#x21BA; CALC</button></div>
+</div>
+
+<!-- COMBAT BAR -->
+<div class="cbt-bar">
+  <div class="cv"><div class="cvlbl">Block</div><div class="cvval" id="c-blk">+3</div></div>
+  <div class="cv"><div class="cvlbl">Dodge</div><div class="cvval" id="c-ddg">+3</div></div>
+  <div class="cv"><div class="cvlbl">Melee Hit</div><div class="cvval" id="c-mel">+1</div></div>
+  <div class="cv"><div class="cvlbl">WIS Mod</div><div class="cvval" id="c-wis">+5</div></div>
+  <div class="cv"><div class="cvlbl">Initiative</div><div class="cvval" id="c-ini">+1</div></div>
+</div>
+
+<!-- MAIN 3-COL -->
+<div class="main-grid">
+  <div class="lc">
+    <div class="panel"><div class="ptitle">Attributes</div><div id="attrs-panel"></div></div>
+    <div class="panel">
+  <div class="ptitle">Skills</div>
+  <div class="sk-colhdr">
+    <div class="sk-hlab"></div>
+    <div class="sk-hlab" style="text-align:left">SKILL</div>
+    <div class="sk-hlab">BONUS</div>
+    <div class="sk-hlab" style="background:rgba(114,50,190,.1);border-left:1px solid rgba(114,50,190,.25);border-right:1px solid rgba(114,50,190,.25);padding:2px 0;color:var(--sp)">&#x1F4D6;&nbsp;MAG</div>
+    <div class="sk-hlab">MOD</div>
+  </div>
+  <div id="skills-panel"></div>
+</div>
+  </div>
+
+  <div class="cc">
+    <!-- STAMINA POOL -->
+    <div class="panel">
+      <div class="ptitle">Stamina &#x2014; Grimoire</div>
+      <div class="pool-panel">
+        <div class="pool-row">
+          <div class="ring-wrap">
+            <div class="ring-outer acc-ring" id="pool-ring" style="background:conic-gradient(var(--acc) 0%,var(--acc) 90%,#1a1a1a 90%)">
+              <div class="ring-inner">
+                <div class="ring-n" id="pool-n">90</div>
+                <div class="ring-mx" id="pool-mx-lbl">/ 100</div>
+                <div class="ring-lb">STAMINA</div>
+              </div>
+            </div>
+            <div class="pool-bar"><div class="pool-fill-acc" id="pool-fill" style="width:90%"></div></div>
+            <div class="pool-ctl">
+              <button class="pb" onclick="adjPool(-10)">&#8722;10</button>
+              <button class="pb" onclick="adjPool(-5)">&#8722;5</button>
+              <input class="pool-inp" id="pool-inp" type="number" value="90" oninput="setPool(+this.value)">
+              <button class="pb" onclick="adjPool(5)">+5</button>
+            </div>
+            <button class="pool-full acc-full" onclick="fullPool()">&#x21BA; FULL</button>
+          </div>
+          <div class="pool-right" id="ab-grid-stamina"></div>
+        </div>
+      </div>
+      <div class="ab-add" style="border-top:1px solid var(--b1)">
+        <input class="ai" id="na-s-name" placeholder="Ability..." style="flex:1">
+        <input class="ai" id="na-s-desc" placeholder="Desc..." style="flex:2">
+        <input class="ai" id="na-s-cost" placeholder="Cost" style="width:44px;flex:none">
+        <button class="add-btn" onclick="addAbility('s')">+ ADD</button>
+      </div>
+    </div>
+
+    <!-- PACT POOL -->
+    <div class="panel red-panel">
+      <div class="ptitle" style="color:var(--red)">Covenant Pool &#x2014; Sparda Pact</div>
+      <div class="pool-panel">
+        <div class="pool-row">
+          <div class="ring-wrap">
+            <div class="ring-outer red-ring" id="pact-ring" style="background:conic-gradient(var(--red) 0%,var(--red) 100%,#1a1a1a 100%)">
+              <div class="ring-inner">
+                <div class="ring-n" id="pact-n">30</div>
+                <div class="ring-mx" id="pact-mx-lbl">/ 30</div>
+                <div class="ring-lb">COVENANT</div>
+              </div>
+            </div>
+            <div class="pool-bar"><div class="pool-fill-red" id="pact-fill" style="width:100%"></div></div>
+            <div class="pool-ctl">
+              <button class="pb red-pb" onclick="adjPact(-10)">&#8722;10</button>
+              <button class="pb red-pb" onclick="adjPact(-5)">&#8722;5</button>
+              <input class="pool-inp" id="pact-inp" type="number" value="30" oninput="setPact(+this.value)">
+              <button class="pb red-pb" onclick="adjPact(5)">+5</button>
+            </div>
+            <button class="pool-full red-full" onclick="fullPact()">&#x21BA; RESTORE</button>
+          </div>
+          <div class="pool-right" id="ab-grid-pact"></div>
+        </div>
+      </div>
+      <div class="pact-state">
+        <div class="ps-blk">
+          <div class="ps-lbl">Winged Form</div>
+          <button class="tog-btn" id="wing-btn" onclick="toggleWings()">INACTIVE</button>
+        </div>
+        <div class="ps-blk" id="wing-turn-btn" style="display:none">
+          <div class="ps-lbl">Turn Cost</div>
+          <button class="tog-btn" onclick="advanceWingTurn()" style="border-color:var(--red);color:var(--red)">NEXT TURN (&#x2212;10)</button>
+        </div>
+
+        <div class="ps-blk">
+          <div class="ps-lbl">Sparda Status</div>
+          <div style="font-family:var(--fm);font-size:10px;color:var(--txt3);padding:3px 0">SILENT</div>
+        </div>
+      </div>
+      <div class="ab-add" style="border-top:1px solid var(--b1)">
+        <input class="ai" id="na-p-name" placeholder="Pact ability..." style="flex:1">
+        <input class="ai" id="na-p-desc" placeholder="Desc..." style="flex:2">
+        <input class="ai" id="na-p-cost" placeholder="Cost" style="width:44px;flex:none">
+        <button class="add-btn" onclick="addAbility('p')">+ ADD</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ptitle">Status Effects</div>
+      <div class="sts-grid" id="sts-grid"></div>
+  <div class="sts-add">
+    <input id="ns-name" placeholder="Status..." style="width:130px">
+    <select id="ns-type"><option value="neg">Negative</option><option value="pos">Positive</option><option value="neu">Neutral</option></select>
+    <input id="ns-dur" placeholder="Duration" style="width:75px">
+    <button class="add-btn" onclick="addSts()">+ STATUS</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ptitle ctitle" id="lvl-title" onclick="toggleColl('lvl-body','lvl-title')">Level Progression</div>
+      <div class="cbody coll" id="lvl-body" style="overflow-x:auto"><table class="lvl-table" id="lvl-table"></table></div>
+    </div>
+  </div>
+
+  <div class="rc">
+    <div class="panel"><div class="ptitle">Attribute Training</div><div id="training-panel"></div></div>
+    <div class="panel"><div class="ptitle">Training Choices</div><div class="ci" id="choices-panel"></div></div>
+    <div class="panel">
+      <div class="ptitle">Notable Relationships</div>
+      <div id="rel-panel"></div>
+      <div class="rel-add">
+        <input class="ai" id="nr-name" placeholder="Name" style="flex:1"><input class="ai" id="nr-disp" placeholder="Disp." style="width:55px;flex:none">
+        <input class="ai" id="nr-spec" placeholder="Role" style="flex:1"><button class="add-btn" onclick="addRel()">+</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lower-grid">
+  <div class="ll">
+    <div class="panel"><div class="ptitle">Resources</div><div class="res-grid" id="res-grid"></div></div>
+    <div class="panel"><div class="ptitle">Weapons</div><div id="wpn-list"></div>
+      <div class="wpn-add">
+        <input class="ai" id="nw-name" placeholder="Name" style="flex:1.5"><input class="ai" id="nw-dmg" placeholder="Dmg" style="width:52px;flex:none">
+        <input class="ai" id="nw-notes" placeholder="Notes" style="flex:2">
+        <select class="wpn-sel" id="nw-type"><option value="std">Std</option><option value="energy">Energy</option><option value="special">Special</option></select>
+        <button class="add-btn" onclick="addWpn()">+</button>
+      </div>
+    </div>
+  </div>
+  <div class="rl">
+    <div class="panel"><div class="ptitle">Perks &amp; Passive Abilities</div><div id="perk-list"></div>
+      <div class="perk-add">
+        <input class="ai" id="np-name" placeholder="Perk name" style="flex:1"><input class="ai" id="np-type" placeholder="Type" style="width:65px;flex:none">
+        <input class="ai" id="np-desc" placeholder="Description" style="flex:2"><button class="add-btn" onclick="addPerk()">+</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="act-grid">
+  <div class="panel act-panel"><div class="ptitle">Actions</div><div id="act-list"></div>
+    <div class="act-add"><input id="na-act" placeholder="Add action..."><button class="add-btn" onclick="addAct()">+</button></div></div>
+  <div class="panel act-panel"><div class="ptitle">Bonus Actions</div><div id="bon-list"></div>
+    <div class="act-add"><input id="na-bon" placeholder="Add bonus action..."><button class="add-btn" onclick="addBon()">+</button></div></div>
+</div>
+
+
+
+<div class="panel" style="margin-bottom:6px">
+  <div class="ptitle">Inventory</div>
+  <div class="money-row">
+    <div class="mlbl">&#xA5; BALANCE</div>
+    <input class="minp" id="money-i" value="8,000,000">
+    <div class="ltag">Languages: English &#xB7; Japanese</div>
+  </div>
+  <div id="inv-list"></div>
+  <div class="inv-add">
+    <input id="ni-name" placeholder="Item name..." style="flex:2"><input id="ni-tag" placeholder="Lbs/Tag" style="width:75px;flex:none">
+    <label style="display:flex;align-items:center;gap:3px;font-family:var(--fo);font-size:7px;color:var(--txt3);cursor:pointer"><input type="checkbox" id="ni-q"> QUEST</label>
+    <button class="add-btn" onclick="addInv()">+ ADD</button>
+  </div>
+  <textarea class="inv-notes" id="inv-notes" placeholder="Inventory notes..."></textarea>
+</div>
+
+<div class="panel" style="margin-bottom:6px"><div class="ptitle">Session Notes</div>
+  <textarea class="sess-notes" id="sess-notes" placeholder="Session notes..."></textarea></div>
+
+<div class="save-bar">
+  <button class="savebtn" onclick="saveState()">&#x2B06; SAVE STATE</button>
+  <button class="loadbtn" onclick="loadState()">&#x2B07; LOAD STATE</button>
+  <div class="save-st" id="save-st">Not yet saved.</div>
+</div>
+</div><!-- wrap -->
+
+<script>
+var PORTRAIT_B64 = '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';
+document.getElementById('portrait-img').src = 'data:image/jpeg;base64,' + PORTRAIT_B64;
+
+var ATTR_KEYS=['str','dex','con','int','wis','chr'];
+var ATTR_NAMES={str:'STR',dex:'DEX',con:'CON',int:'INT',wis:'WIS',chr:'CHR'};
+
+var SKILLS=[
+  {id:'acrobatics',  name:'Acrobatics',   attr:'dex', boost:0},
+  {id:'athletics',   name:'Athletics',    attr:'str', boost:0},
+  {id:'awareness',   name:'Awareness',    attr:'int', boost:0},
+  {id:'engineering', name:'Engineering',  attr:'int', boost:0},
+  {id:'fortitude',   name:'Fortitude',    attr:'con', boost:0},
+  {id:'heal',        name:'Heal',         attr:'wis', boost:0},
+  {id:'intimidate',  name:'Intimidate',   attr:'chr', boost:0},
+  {id:'linguistics', name:'Linguistics',  attr:'chr', boost:0},
+  {id:'nature',      name:'Nature',       attr:'wis', boost:0},
+  {id:'nen',         name:'Nen',          attr:'wis', boost:0},
+  {id:'perform',     name:'Perform',      attr:'chr', boost:0},
+  {id:'ride',        name:'Ride',         attr:'int', boost:0},
+  {id:'sense_motive',name:'Sense Motive', attr:'wis', boost:0, note:'WIS'},
+  {id:'speech',      name:'Speech',       attr:'wis', boost:0, note:'WIS'},
+  {id:'stealth',     name:'Stealth',      attr:'dex', boost:0},
+  {id:'technology',  name:'Technology',   attr:'int', boost:0},
+  {id:'thieving',    name:'Thieving',     attr:'dex', boost:0}
+];
+
+var TRAIN=[
+  {attr:'STR', key:'str', max:11, filled:1, tiers:[
+    {d:'T1: +20 Carry Weight; +1 to all melee attack rolls', eff:[{t:'cw_max',v:20},{t:'melee_hit',v:1}]},
+    {d:'T2: Melee Weapon Proficiency — choose one melee weapon type; +3 damage with that type', eff:[{t:'attr_note',v:3}], c:true, lbl:'Melee Weapon Type', v:'Swords'},
+    {d:'T3: +2 to all melee attack rolls; +1 to all Block rolls; proficient weapon die improves one step', eff:[{t:'melee_hit',v:2},{t:'block',v:1}]},
+    {d:'T4 (REQ STR 15+): +3 Strength; Attack of Opportunity — free melee strike when enemy moves through your range without Dodging (once per round)', eff:[{t:'attr_note',v:3}]},
+    {d:'T5: Cleave — Main Action attack may target one additional adjacent enemy; each defends independently', eff:[{t:'attr_note',v:1}]},
+    {d:'T6: Melee Proficiency +6 damage; +2 to all other melee weapons', eff:[{t:'attr_note',v:6}]},
+    {d:'T7 (REQ STR 25+): Max Supplies 200; melee attacks ignore first 5 Armor HP per hit', eff:[{t:'supply_max',v:200}]},
+    {d:'T8: +7 Strength; Melee Proficiency +8 damage; melee attacks push 5ft on hit; proficient weapon die +1 more step', eff:[{t:'attr_note',v:7}]},
+    {d:'T9 (REQ STR 40+): Melee Proficiency +10 damage applies to ALL melee types; +5ft weapon reach; Cleave now hits ALL adjacent enemies for full damage; Returning Throw', eff:[{t:'attr_note',v:10}]},
+    {d:'T10: +10 Strength; +10 damage with proficient weapon; Attack of Opportunity can trigger twice per round', eff:[{t:'attr_note',v:10}]},
+    {d:'T11 (REQ STR 50+): +10 STR (cap 60); carry weight limit removed; pierce 10 Armor HP; Momentum — free attack on any melee kill', eff:[{t:'attr_note',v:10}]}
+  ]},
+  {attr:'DEX', key:'dex', max:11, filled:1, tiers:[
+    {d:'T1: +2 to any Dodge roll', eff:[{t:'dodge',v:2}]},
+    {d:'T2: Ranged Weapon Proficiency — choose one ranged weapon type; +3 to attack rolls with that type', eff:[{t:'attr_note',v:3}], c:true, lbl:'Ranged Weapon Type', v:'Pistols'},
+    {d:'T3: Equipping weapons is a Free Action', eff:[{t:'attr_note',v:1}]},
+    {d:'T4 (REQ DEX 15+): All Dexterity skills +2', eff:[{t:'skill_bonus',id:'acrobatics',v:2},{t:'skill_bonus',id:'stealth',v:2},{t:'skill_bonus',id:'thieving',v:2}]},
+    {d:'T5: +3 permanent movement', eff:[{t:'movement',v:3}]},
+    {d:'T6: +5 to any Dodge roll', eff:[{t:'dodge',v:5}]},
+    {d:'T7 (REQ DEX 25+): Ranged Proficiency +6 to hit; Quick Draw — draw and fire in same action', eff:[{t:'attr_note',v:6}]},
+    {d:'T8: All Dexterity skills +4; ranged attacks ignore partial and low cover', eff:[{t:'skill_bonus',id:'acrobatics',v:4},{t:'skill_bonus',id:'stealth',v:4},{t:'skill_bonus',id:'thieving',v:4}]},
+    {d:'T9 (REQ DEX 40+): Ranged Proficiency +10 to hit; +6 Dexterity; +30ft range before falloff; proficiency all ranged types', eff:[{t:'attr_note',v:6}]},
+    {d:'T10: +10 Dexterity; +10 to hit with proficient; movement no longer provokes AoO; successful Dodge grants 2 free squares', eff:[{t:'attr_note',v:10}]},
+    {d:'T11 (REQ DEX 50+): +10 DEX (cap 60); all DEX skills +6; movement cap +3; free counterattack on Dodge; always act first in initiative', eff:[{t:'skill_bonus',id:'acrobatics',v:6},{t:'skill_bonus',id:'stealth',v:6},{t:'skill_bonus',id:'thieving',v:6},{t:'movement',v:3}]}
+  ]},
+  {attr:'CON', key:'con', max:11, filled:1, tiers:[
+    {d:'T1: +2 to any Block; +2 Fortitude', eff:[{t:'block',v:2},{t:'skill_bonus',id:'fortitude',v:2}]},
+    {d:'T2: +25 max Health', eff:[{t:'hp_max',v:25}]},
+    {d:'T3: +3 Constitution; +2 permanent movement', eff:[{t:'movement',v:2}]},
+    {d:'T4 (REQ CON 15+): +2 Constitution; choose 1 damage type resistance (not Physical, Explosive, Sonic, or Nen)', eff:[{t:'attr_note',v:2}], c:true, lbl:'Resistance Type'},
+    {d:'T5: +3 Constitution; Fortitude now covers all resistance to supernatural status effects (Nen Disruption, Cursed, Corrupted)', eff:[{t:'attr_note',v:3}]},
+    {d:'T6: 1 resistance each to two different damage types (not Physical, Explosive, Sonic, or Nen)', eff:[{t:'attr_note',v:1}]},
+    {d:'T7 (REQ CON 25+): +7 to any Block', eff:[{t:'block',v:7}]},
+    {d:'T8: Negative Status Effects always halved (min 1 turn); minimum damage taken reduced to 1', eff:[{t:'attr_note',v:1}]},
+    {d:'T9 (REQ CON 40+): +8 Constitution; +50 max Health; reduce all incoming Physical damage by 2', eff:[{t:'hp_max',v:50}]},
+    {d:'T10: 4 additional resistances; double-stacking a type grants full immunity', eff:[{t:'attr_note',v:4}]},
+    {d:'T11 (REQ CON 50+): +10 CON (cap 60); max Health +150; immunity to second type; all damage -3 flat; Refuses to Die — once per session stabilize at 1 HP', eff:[{t:'hp_max',v:150}]}
+  ]},
+  {attr:'INT', key:'int', max:11, filled:1, tiers:[
+    {d:'T1: +2 to a chosen INT skill; +2 Awareness', eff:[{t:'choice_skill',v:2},{t:'skill_bonus',id:'awareness',v:2}], c:true, lbl:'Chosen INT Skill', chosen_skill:'technology'},
+    {d:'T2: +2 Technology; +2 Awareness; +2 Engineering; +2 Ride', eff:[{t:'skill_bonus',id:'technology',v:2},{t:'skill_bonus',id:'awareness',v:2},{t:'skill_bonus',id:'engineering',v:2},{t:'skill_bonus',id:'ride',v:2}]},
+    {d:'T3: +3 Intelligence; +3 to a chosen INT skill', eff:[{t:'choice_skill',v:3}], c:true, lbl:'Chosen INT Skill (T3)', chosen_skill:'technology'},
+    {d:'T4 (REQ INT 15+): CHOOSE PATH — Tech Specialization (gadgets, augments, energy cells) OR Tactical Analysis (INT mod to initiative & attack rolls)', eff:[{t:'attr_note',v:1}]},
+    {d:'T5 — Tech: +7 Armor per Repair Kit; INT mod÷2 to ALL attacks; Energy Cell +20 | Tactical: INT skills +3; +4 Awareness', eff:[{t:'attr_note',v:1}]},
+    {d:'T6 (Shared): +3 Technology & Engineering; +5 Ride (proficient vehicle); Gadgets per session 2; enhanced crafting', eff:[{t:'skill_bonus',id:'technology',v:3},{t:'skill_bonus',id:'engineering',v:3}]},
+    {d:'T7 (REQ INT 25+) — Tech: +5 INT; Gadgets+1; costs -5 | Tactical: INT skills +3; +2 Block & Dodge', eff:[{t:'attr_note',v:5}]},
+    {d:'T8: +5 to all INT skills (both paths)', eff:[{t:'skill_bonus',id:'technology',v:5},{t:'skill_bonus',id:'engineering',v:5},{t:'skill_bonus',id:'awareness',v:5},{t:'skill_bonus',id:'ride',v:5}]},
+    {d:'T9 (REQ INT 40+): +7 INT; full INT modifier to ALL attack rolls when using path abilities', eff:[{t:'attr_note',v:7}]},
+    {d:'T10: Advanced path abilities — see compendium', eff:[{t:'attr_note',v:1}]},
+    {d:'T11 (REQ INT 50+): +10 INT (cap 60); Specialization pinnacle; Augments become permanent body modifications', eff:[{t:'attr_note',v:10}]}
+  ]},
+  {attr:'WIS', key:'wis', max:11, filled:5, tiers:[
+    {d:'T1 (Shared — Nen & NA): +2 Nen; +2 Nature', eff:[{t:'skill_bonus',id:'nen',v:2},{t:'skill_bonus',id:'nature',v:2}]},
+    {d:'T2 (Shared): +3 to a chosen Wisdom skill', eff:[{t:'choice_skill',v:3}], c:true, lbl:'Chosen WIS Skill', chosen_skill:'heal'},
+    {d:'T3 (Nen Path): Resistance to Nen damage; +2 Nature; +2 Awareness (flat bonus to INT skill)', eff:[{t:'skill_bonus',id:'nature',v:2},{t:'skill_bonus',id:'awareness',v:2}]},
+    {d:'T4 (REQ WIS 15+, Nen Path): Establish a Nen Ability — a personal, unique expression of internal energy developed with the DM. Has Passive (free), Active (stamina cost), and Signature (high cost, once per combat). Stamina Pool = WIS mod × 10. For Asta: Anti-Nen Grimoire — swords physically cancel and delete any Nen they touch.', eff:[{t:'attr_note',v:1}]},
+    {d:'T5 (Shared — Nen & NA): All Wisdom skills +3', eff:[{t:'skill_bonus',id:'nen',v:3},{t:'skill_bonus',id:'nature',v:3},{t:'skill_bonus',id:'heal',v:3},{t:'skill_bonus',id:'sense_motive',v:3},{t:'skill_bonus',id:'speech',v:3}]},
+    {d:'T6 (Shared): Permanent +7 HP per Heal Charge use (not on a roll of 1)', eff:[{t:'attr_note',v:7}]},
+    {d:'T7 (Shared): All Wisdom skills +3', eff:[{t:'skill_bonus',id:'nen',v:3},{t:'skill_bonus',id:'nature',v:3},{t:'skill_bonus',id:'heal',v:3},{t:'skill_bonus',id:'sense_motive',v:3},{t:'skill_bonus',id:'speech',v:3}]},
+    {d:'T8 (REQ WIS 25+, Nen Path): +10 Nen skill; Stamina Pool +30; WIS mod÷2 added to Nen attack rolls', eff:[{t:'skill_bonus',id:'nen',v:10}]},
+    {d:'T9 (REQ WIS 40+, Nen Path): Apply full WIS modifier to attack rolls when using Nen Ability (replaces T8 half modifier; see Mental Attribute Modifier rule)', eff:[{t:'attr_note',v:1}]},
+    {d:'T10: +15 to a chosen WIS skill; that skill gains a Unique Ability (Nen path: commune with an element or force of nature)', eff:[{t:'attr_note',v:15}]},
+    {d:'T11 (REQ WIS 50+): +10 WIS (cap 60); Nen Ability reaches Pinnacle — transcendent fourth expression; once per session consuming Signature activates a state beyond Pinnacle; cannot be anticipated or conventionally defended against', eff:[{t:'attr_note',v:10}]}
+  ]},
+  {attr:'CHR', key:'chr', max:11, filled:1, tiers:[
+    {d:'T1 (Shared — Presence & Pact): +2 Linguistics; +2 Speech', eff:[{t:'skill_bonus',id:'linguistics',v:2},{t:'skill_bonus',id:'speech',v:2}]},
+    {d:'T2 (Shared): Extra Dialogue per Turn; +2 Speech; +2 Intimidate; Intimidate usable in combat as Bonus Action (on success: target -2 all rolls, must target you; once per enemy per combat)', eff:[{t:'skill_bonus',id:'speech',v:2},{t:'skill_bonus',id:'intimidate',v:2}]},
+    {d:'T3 (Shared): +3 Charisma; +3 Perform; once per session auto-20 on a Speech check (declare before rolling)', eff:[{t:'skill_bonus',id:'perform',v:3}]},
+    {d:'T4 (REQ CHR 15+, Pact Path): CHR mod÷2 to ALL attack rolls; Alignment chosen (Angelic/Demonic/Balanced); first Major Pact with named entity; physical transformation begins; Covenant Pool = CHR mod × 10', eff:[{t:'attr_note',v:1}]},
+    {d:'T5 (Pact): Pact develops — second ability or enhancement of first; Covenant Pool +20; all CHR skills +2', eff:[{t:'skill_bonus',id:'speech',v:2},{t:'skill_bonus',id:'intimidate',v:2},{t:'skill_bonus',id:'linguistics',v:2},{t:'skill_bonus',id:'perform',v:2}]},
+    {d:'T6 (Shared): All Charisma skills +3', eff:[{t:'skill_bonus',id:'speech',v:3},{t:'skill_bonus',id:'intimidate',v:3},{t:'skill_bonus',id:'linguistics',v:3},{t:'skill_bonus',id:'perform',v:3}]},
+    {d:'T7 (REQ CHR 25+, Shared): All prices permanently halved; +8 Charisma; communicate with any animal or non-hostile creature', eff:[{t:'attr_note',v:8}]},
+    {d:'T8 (Shared — Pact): All CHR skills +3; +4 Charisma; Battle Cry (Bonus Action, twice per combat — ally within 30ft removes one status effect); Pact Passive Enhanced', eff:[{t:'skill_bonus',id:'speech',v:3},{t:'skill_bonus',id:'intimidate',v:3},{t:'skill_bonus',id:'linguistics',v:3},{t:'skill_bonus',id:'perform',v:3}]},
+    {d:'T9 (REQ CHR 40+, Pact): +7 Charisma; CHR modifier to all pact relationship rolls; full CHR modifier to ALL attack rolls (replaces T4 half modifier)', eff:[{t:'attr_note',v:7}]},
+    {d:'T10 (Pact): Grand pact slot unlocked; pact abilities reach Major tier; physical transformation complete; CHR modifier applies to Covenant Pool recharge rate', eff:[{t:'attr_note',v:1}]},
+    {d:'T11 (REQ CHR 50+): +10 CHR (cap 60); entity can partially manifest in combat; CHR modifier applies to all pact-channeled attack rolls', eff:[{t:'attr_note',v:10}]}
+  ]}
+];
+
+var STAM_ABILITIES=[
+  {name:'Conjure Swords',desc:'10 Stamina per sword conjured (1–3 swords). Set cost field: 10 = 1 sword, 20 = 2 swords, 30 = 3 swords. Swords CANCEL AND DELETE any Nen they touch.',cost:10,special:false}
+];
+var PACT_ABILITIES=[
+  {name:'Winged Form',desc:'+5 Movement (+3 additional in flight). D6 Fire added to ALL strikes while active. Costs 10 Covenant/turn. Black Meteorite resets on activation.',cost:0,special:false},
+  {name:'Black Meteorite',desc:'FREE REACTION — Sense Motive +6. Shadow burst strike during Winged Form. ONE USE per Winged Form.',cost:0,special:true}
+];
+
+var LVL_DATA=[
+  {l:1, dt:'Standard (d20)',          atk:'1+1B', notes:'Starting character'},
+  {l:2, dt:'Standard',                atk:'1+1B', notes:'+3 Attr to lowest'},
+  {l:3, dt:'Standard',                atk:'1+1B', notes:'+2 Attr, +1 Skill, HP(CON)'},
+  {l:4, dt:'Standard',                atk:'1+1B', notes:'+1 Attr, +2 Skills'},
+  {l:5, dt:'Standard',                atk:'1+1B', notes:'+4 Attr ← CURRENT'},
+  {l:6, dt:'Standard',                atk:'1+1B', notes:'+2 Attr, +4 Skills, HP(CON)'},
+  {l:7, dt:'Standard',                atk:'1+1B', notes:'+6 Attr'},
+  {l:8, dt:'Standard',                atk:'1+1B', notes:'HP(CON×2); +1 Resistance'},
+  {l:9, dt:'Standard',                atk:'2+1B', notes:'+6 Attr, +4 Skills, Extra Attack; Total Defense'},
+  {l:10,dt:'→ Elite (2d20)',     atk:'2+1B', notes:'Signature Technique; +5 Attr, HP(CON×3); cap 20→50'},
+  {l:11,dt:'Elite',                   atk:'2+1B', notes:'+2 Attr, +4 Skills'},
+  {l:12,dt:'Elite',                   atk:'2+1B', notes:'Language; +2 Attr, +6 Skills, HP(CON×3)'},
+  {l:13,dt:'Elite',                   atk:'2+1B', notes:'+2 perm Move, +4 Attr, HP(CON×3)'},
+  {l:14,dt:'Elite',                   atk:'2+1B', notes:'+4 Attr, +4 Skills; +5 to one skill'},
+  {l:15,dt:'Elite',                   atk:'2+1B', notes:'+7 Attr, HP(CON×3); Swap Skill Attribute'},
+  {l:16,dt:'Elite',                   atk:'2+2B', notes:'+2 Attr; 2nd Bonus Action'},
+  {l:17,dt:'Elite',                   atk:'2+2B', notes:'+4 Attr, +2 Skills, HP(CON×3)'},
+  {l:18,dt:'Elite',                   atk:'2+2B', notes:'+3 Attr; +4 to one skill'},
+  {l:19,dt:'Elite',                   atk:'2+2B', notes:'+2 Attr; remove Weakness; Exalted Weapon'},
+  {l:20,dt:'→ Legendary (2d20+d6)',atk:'2+2B',notes:'+5 Attr, HP(CON×3); Combat Advancement'}
+];
+
+var S={
+  attrs:{str:9,dex:8,con:8,int:1,wis:16,chr:4},
+  skills:(function(){var o={};for(var i=0;i<SKILLS.length;i++) o[SKILLS[i].id]=SKILLS[i].boost;return o;})(),
+  train:TRAIN.map(function(t){return {filled:t.filled,choices:{}};}),
+  pool:{cur:50,max:50},
+  pact:{cur:30,max:30},
+  meteoriteUsed:false,
+  hp:{cur:8,max:34},armor:{cur:5,max:5},move:{cur:5,max:5},sup:{cur:10,max:100},cw:{cur:108,max:110},
+  level:5,wings:false,shadow:false,
+  age:"23",bounty:"—",
+  badges:{res:['Nen','Fire'],weak:['Poison','Light']},
+  sAbilities:STAM_ABILITIES.map(function(a){return {name:a.name,desc:a.desc,cost:a.cost,special:a.special};}),
+  pAbilities:PACT_ABILITIES.map(function(a){return {name:a.name,desc:a.desc,cost:a.cost,special:a.special};}),
+  weapons:[],perks:[],actions:[],bonuses:[],statuses:[],inventory:[],relationships:[],
+  res_heal:0,res_kit:0,res_adr:0,res_sp:0,
+  armorLbs:10,
+  skills_mag:{},
+  conSumMax:2,
+  skillMag:{},
+  invNotes:'',sessNotes:'',money:'8,000,000'
+};
+
+function getMod(s){return Math.floor((s-6)/2);}
+function fmt(v){return (v>=0?'+':'')+v;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function mcls(v){return v>0?'p':v<0?'n':'z';}
+
+function calcDerived(){
+  var hpB=0,mvB=0,blkB=0,ddgB=0,melB=0,cwB=0,supB=0;
+  var skillB={};
+  var i,t,td,tier,ef,ck,cs;
+  for(i=0;i<TRAIN.length;i++){
+    td=TRAIN[i];
+    for(t=0;t<S.train[i].filled;t++){
+      tier=td.tiers[t];if(!tier) continue;
+      for(var e=0;e<tier.eff.length;e++){
+        ef=tier.eff[e];
+        if(ef.t==='hp_max') hpB+=ef.v;
+        else if(ef.t==='movement') mvB=Math.min(mvB+ef.v,12);
+        else if(ef.t==='block') blkB+=ef.v;
+        else if(ef.t==='dodge') ddgB+=ef.v;
+        else if(ef.t==='melee_hit') melB+=ef.v;
+        else if(ef.t==='cw_max') cwB+=ef.v;
+        else if(ef.t==='supply_max') supB=ef.v;
+        else if(ef.t==='skill_bonus'){skillB[ef.id]=(skillB[ef.id]||0)+ef.v;}
+        else if(ef.t==='choice_skill'){
+          ck=td.key+'_t'+t;
+          cs=(S.train[i].choices&&S.train[i].choices[ck])||tier.chosen_skill||'';
+          if(cs) skillB[cs]=(skillB[cs]||0)+ef.v;
+        }
+      }
+    }
+  }
+
+  // Stamina max = WIS mod * 10
+  var wisMod2=getMod(S.attrs.wis);
+  S.pool.max=Math.max(10,wisMod2*10);
+  // Consumable max = ceil(CON score / 5)
+  var prevCSM=S.conSumMax||0;
+  S.conSumMax=Math.ceil(S.attrs.con/5)||1;
+  if(S.conSumMax!==prevCSM && prevCSM!==0) renderResources();
+  S.hp.max=34+hpB;
+  var el=document.getElementById('hp-mx');if(el&&document.activeElement!==el) el.value=S.hp.max;
+
+  S.move.max=Math.min(5+mvB,17);
+  el=document.getElementById('mv-mx');if(el&&document.activeElement!==el) el.value=S.move.max;
+  el=document.getElementById('hdr-mv');if(el) el.textContent=S.move.max;
+
+  S.cw.max=S.attrs.str*10+cwB;
+  el=document.getElementById('cw-mx');if(el&&document.activeElement!==el) el.value=S.cw.max;
+  S.sup.max=supB>0?supB:100;
+  el=document.getElementById('sup-mx');if(el&&document.activeElement!==el) el.value=S.sup.max;
+
+  // Supplies lbs display
+  var supLbs=document.getElementById('sup-lbs');
+  if(supLbs) supLbs.textContent=Math.floor(S.sup.cur/4)+' Lbs used';
+
+  var blk=getMod(S.attrs.con)+blkB;
+  var ddg=getMod(S.attrs.dex)+ddgB;
+  var mel=getMod(S.attrs.str)+melB;
+  var wisMod=getMod(S.attrs.wis);
+  var ini=getMod(S.attrs.dex);
+  setCbt('c-blk',blk);setCbt('c-ddg',ddg);setCbt('c-mel',mel);setCbt('c-wis',wisMod);setCbt('c-ini',ini);
+
+  var lv=S.level;
+  el=document.getElementById('hdr-dt');if(el) el.textContent=lv>=20?'Legend':lv>=10?'Elite':'Std';
+  el=document.getElementById('hdr-atk');if(el) el.textContent=lv>=16?'2+2B':lv>=9?'2+1B':'1+1B';
+
+  for(var si=0;si<SKILLS.length;si++){
+    var sk=SKILLS[si];
+    var trainB=skillB[sk.id]||0;
+    var manB=S.skills[sk.id]||0;
+    var tot=getMod(S.attrs[sk.attr])+trainB+manB;
+    el=document.getElementById('skt-'+sk.id);
+    if(el){el.textContent=fmt(tot);el.className='sktot '+mcls(tot);}
+    // Show training bonus in boost field if user isn't editing it
+    var bEl=document.getElementById('skb-'+sk.id);
+    if(bEl&&document.activeElement!==bEl) bEl.value=trainB+manB;
+  }
+  for(var ti=0;ti<TRAIN.length;ti++){
+    el=document.getElementById('tcnt-'+TRAIN[ti].key);
+    if(el) el.textContent=S.train[ti].filled+' / '+TRAIN[ti].max;
+  }
+  for(var ai=0;ai<ATTR_KEYS.length;ai++){
+    var k=ATTR_KEYS[ai];var m2=getMod(S.attrs[k]);
+    el=document.getElementById('amod-'+k);
+    if(el){el.textContent=fmt(m2);el.className='am '+mcls(m2);}
+  }
+  var pCur=S.pool.cur;
+  var btns=document.querySelectorAll('.ab-use');
+  for(var bi=0;bi<btns.length;bi++){
+    var cost=parseInt(btns[bi].getAttribute('data-cost'))||0;
+    var poolType=btns[bi].getAttribute('data-pool');
+    var cur2=poolType==='p'?S.pact.cur:S.pool.cur;
+    btns[bi].disabled=(cost>0&&cur2<cost);
+  }
+}
+function setCbt(id,val){var el=document.getElementById(id);if(!el) return;el.textContent=fmt(val);el.className='cvval '+mcls(val);}
+
+function renderAttrs(){
+  var p=document.getElementById('attrs-panel');if(!p) return;var h='';
+  for(var i=0;i<ATTR_KEYS.length;i++){
+    var k=ATTR_KEYS[i],sc=S.attrs[k],mod=getMod(sc);
+    h+='<div class="arow"><div class="an">'+ATTR_NAMES[k]+'</div>'
+      +'<input class="as" type="number" id="asc-'+k+'" value="'+sc+'" oninput="onAttr(\''+k+'\',+this.value)">'
+      +'<div class="am '+mcls(mod)+'" id="amod-'+k+'">'+fmt(mod)+'</div></div>';
+  }
+  p.innerHTML=h;
+}
+
+function renderSkills(){
+  var p=document.getElementById('skills-panel');if(!p) return;
+  if(!S.skills_mag) S.skills_mag={};
+  var atA={str:'STR',dex:'DEX',con:'CON',int:'INT',wis:'WIS',chr:'CHR'};
+  var h='';
+  for(var i=0;i<SKILLS.length;i++){
+    var sk=SKILLS[i];
+    var note=sk.note?'<span class="sknote"> ['+sk.note+']</span>':'';
+    var mv=S.skills_mag[sk.id]||0;
+    h+='<div class="skrow">'
+      +'<div class="sktag">'+atA[sk.attr]+'</div>'
+      +'<div class="skname">'+sk.name+note+'</div>'
+      +'<input class="skboost" type="number" id="skb-'+sk.id+'" value="'+(S.skills[sk.id]||0)+'" oninput="onSkB(\''+sk.id+'\',+this.value)">'
+      +'<div class="skmag">'
+        +'<button class="mag-adj" onclick="adjMag(\''+sk.id+'\',-1)">&#8722;</button>'
+        +'<span class="mag-val" id="mag-'+sk.id+'">'+mv+'</span>'
+        +'<button class="mag-adj" onclick="adjMag(\''+sk.id+'\',1)">+</button>'
+      +'</div>'
+      +'<div class="sktot p" id="skt-'+sk.id+'">0</div>'
+      +'</div>';
+  }
+  p.innerHTML=h;
+}
+
+function renderTraining(){
+  var p=document.getElementById('training-panel');if(!p) return;var h='';
+  for(var i=0;i<TRAIN.length;i++){
+    var td=TRAIN[i];
+    h+='<div class="tsec"><div class="thdr"><div class="tan">'+td.attr+'</div><div class="tcnt" id="tcnt-'+td.key+'">'+S.train[i].filled+' / '+td.max+'</div></div><div class="tpips">';
+    for(var t=0;t<td.max;t++){
+      var on=t<S.train[i].filled?'on':'';
+      h+='<div class="tp '+on+'" id="tp-'+td.key+'-'+t+'" onclick="toggleTier(\''+td.key+'\','+i+','+t+')" onmouseenter="showTT(event,\''+td.key+'\','+i+','+t+')" onmouseleave="hideTT()"></div>';
+    }
+    h+='</div><div class="tchoices" id="tch-'+td.key+'"></div></div>';
+  }
+  p.innerHTML=h;
+  renderChoiceInputs();
+}
+
+function renderChoiceInputs(){
+  for(var i=0;i<TRAIN.length;i++){
+    var td=TRAIN[i];var cont=document.getElementById('tch-'+td.key);if(!cont) continue;var h='';
+    for(var t=0;t<S.train[i].filled;t++){
+      var tier=td.tiers[t];if(!tier||!tier.c) continue;
+      var ck=td.key+'_t'+t;
+      var val=(S.train[i].choices&&S.train[i].choices[ck])||tier.chosen_skill||'';
+      h+='<div class="tcrow"><span class="tclbl">T'+(t+1)+':</span><span style="color:var(--acc);font-family:var(--fo);font-size:6px">'+tier.lbl+'</span>'
+        +'<input class="tcinp" id="tci-'+ck+'" value="'+val+'" oninput="onChoice(\''+td.key+'\','+i+','+t+',this.value)"></div>';
+    }
+    cont.innerHTML=h;
+  }
+  renderChoicesSummary();
+}
+
+function renderChoicesSummary(){
+  var cp=document.getElementById('choices-panel');if(!cp) return;var h='';
+  for(var i=0;i<TRAIN.length;i++){
+    var td=TRAIN[i];
+    for(var t=0;t<S.train[i].filled;t++){
+      var tier=td.tiers[t];if(!tier||!tier.c) continue;
+      var ck=td.key+'_t'+t;
+      var val=(S.train[i].choices&&S.train[i].choices[ck])||tier.chosen_skill||'—';
+      h+='<div class="cline"><span style="color:var(--acc);font-family:var(--fo);font-size:7px">'+td.attr+' T'+(t+1)+':</span> '+val+'</div>';
+    }
+  }
+  cp.innerHTML=h||'<div style="color:var(--txt3);font-size:9px;font-family:var(--fr)">No choices.</div>';
+}
+
+function renderAbilityPool(listId, abilities, poolKey){
+  var grid=document.getElementById(listId);if(!grid) return;var h='';
+  for(var i=0;i<abilities.length;i++){
+    var ab=abilities[i];var sp=ab.special?'spab':'';
+    var isMeteorite=(ab.special&&poolKey==='p');
+    var meteoriteBlocked=isMeteorite&&(S.meteoriteUsed||!S.wings);
+    var dis=(ab.cost>0&&(poolKey==='p'?S.pact.cur:S.pool.cur)<ab.cost)||meteoriteBlocked?' disabled':'';
+    var cl=isMeteorite?(S.meteoriteUsed?'USED':'READY \u2014 FREE'):ab.cost===0?'TOGGLE':'USE \u2212'+ab.cost;
+    h+='<div class="ab-card '+sp+'">'
+      +'<div class="ab-name">'+ab.name+'</div>'
+      +'<div class="ab-desc">'+ab.desc+'</div>'
+      +'<div class="ab-foot">'
+      +'<input class="ab-cost" type="number" value="'+ab.cost+'" oninput="onAbCost(\''+poolKey+'\','+i+',+this.value)">'
+      +'<button class="ab-use" data-cost="'+ab.cost+'" data-pool="'+poolKey+'"'+dis+' onclick="useAb(\''+poolKey+'\','+i+')">'+cl+'</button>'
+      +'<button class="rmbtn" onclick="rmAb(\''+poolKey+'\','+i+')">&#x2715;</button>'
+      +'</div></div>';
+  }
+  grid.innerHTML=h;
+}
+
+function renderLvlTable(){
+  var tbl=document.getElementById('lvl-table');if(!tbl) return;var lv=S.level;
+  var h='<tr><th>Lvl</th><th>Dice Tier</th><th>Atk</th><th>Benefit</th></tr>';
+  for(var i=0;i<LVL_DATA.length;i++){
+    var r=LVL_DATA[i];var cls=r.l===lv?'cur':r.l===lv+1?'nxt':'';
+    h+='<tr class="'+cls+'"><td>'+r.l+'</td><td>'+r.dt+'</td><td>'+r.atk+'</td><td>'+r.notes+'</td></tr>';
+  }
+  tbl.innerHTML=h;
+}
+
+function renderResources(){
+  var grid=document.getElementById('res-grid');if(!grid) return;
+  var cm=S.conSumMax||Math.ceil(S.attrs.con/5)||1;
+  var RES=[{key:'heal',lbl:'Healing Charges',max:cm,style:'hp',cur:Math.min(S.res_heal,cm)},
+    {key:'kit',lbl:'Repair Kits',max:cm,style:'kit',cur:Math.min(S.res_kit,cm)},
+    {key:'adr',lbl:'Adrenaline',max:cm,style:'adr',cur:Math.min(S.res_adr,cm)},
+  ];
+  var h='';
+  for(var i=0;i<RES.length;i++){
+    var r=RES[i];
+    h+='<div class="res-blk"><div class="res-lbl">'+r.lbl+'</div><div class="res-pips">';
+    for(var p2=0;p2<r.max;p2++){var on=p2<r.cur?'on':'';h+='<div class="rp '+r.style+' '+on+'" onclick="togRP(\''+r.key+'\','+p2+','+r.max+')"></div>';}
+    h+='</div><div class="res-cnt" id="rc-'+r.key+'">'+r.cur+' / '+r.max+'</div></div>';
+  }
+  grid.innerHTML=h;
+}
+
+function renderWeapons(){
+  var list=document.getElementById('wpn-list');if(!list) return;
+  var cols={std:'var(--neg)',energy:'var(--blue)',special:'var(--acc)'};var h='';
+  for(var i=0;i<S.weapons.length;i++){
+    var w=S.weapons[i],c=cols[w.type]||'var(--b2)';
+    h+='<div class="wpn-card"><div class="wpn-acc" style="background:'+c+'"></div>'
+      +'<div class="wpn-info"><div class="wpn-name">'+w.name+'</div><div class="wpn-dmg">'+w.dmg+'</div><div class="wpn-notes">'+w.notes+'</div></div>'
+      +'<button class="rmbtn" onclick="rmWpn('+i+')">&#x2715;</button></div>';
+  }
+  list.innerHTML=h;
+}
+
+function renderPerks(){
+  var list=document.getElementById('perk-list');if(!list) return;var h='';
+  for(var i=0;i<S.perks.length;i++){
+    var pk=S.perks[i];var ac=pk.special?'var(--red)':'var(--acc)';var nc=pk.special?'color:var(--red)':'color:var(--acc)';
+    h+='<div class="perk-row"><div class="pk-acc" style="background:'+ac+'"></div>'
+      +'<div class="pk-body"><div class="pk-name" style="'+nc+'">'+pk.name+'</div><div class="pk-type">'+pk.type+'</div><div class="pk-desc">'+pk.desc+'</div></div>'
+      +'<button class="rmbtn" onclick="rmPerk('+i+')">&#x2715;</button></div>';
+  }
+  list.innerHTML=h;
+}
+
+function renderActions(){
+  var al=document.getElementById('act-list'),bl=document.getElementById('bon-list');
+  if(al){var h='';for(var i=0;i<S.actions.length;i++) h+='<div class="act-item"><span class="act-mrk">&#9658;</span><span class="act-txt">'+S.actions[i]+'</span><button class="rmbtn" onclick="rmAct('+i+')">&#x2715;</button></div>';al.innerHTML=h;}
+  if(bl){var h2='';for(var j=0;j<S.bonuses.length;j++) h2+='<div class="act-item"><span class="act-mrk">&#9672;</span><span class="act-txt">'+S.bonuses[j]+'</span><button class="rmbtn" onclick="rmBon('+j+')">&#x2715;</button></div>';bl.innerHTML=h2;}
+}
+
+function renderStatuses(){
+  var grid=document.getElementById('sts-grid');if(!grid) return;var h='';
+  for(var i=0;i<S.statuses.length;i++){var s=S.statuses[i];h+='<div class="sts-card '+s.type+'"><div class="sts-name">'+s.name+'</div><div class="sts-dur">'+s.dur+'</div><button class="rmbtn" onclick="rmSts('+i+')">&#x2715;</button></div>';}
+  if(!S.statuses.length) h='<div style="padding:6px;font-family:var(--fr);font-size:9px;color:var(--txt3)">None active.</div>';
+  grid.innerHTML=h;
+}
+
+function renderInventory(){
+  var list=document.getElementById('inv-list');if(!list) return;var h='';
+  for(var i=0;i<S.inventory.length;i++){var it=S.inventory[i];var cls=it.quest?'inv-item quest':'inv-item';h+='<div class="'+cls+'"><div class="inv-name">'+it.name+'</div><div class="inv-tag">'+it.tag+'</div><button class="rmbtn" onclick="rmInv('+i+')">&#x2715;</button></div>';}
+  list.innerHTML=h;
+}
+
+function renderBadges(){
+  var rb=document.getElementById('res-badges'),wb=document.getElementById('weak-badges');
+  if(rb){rb.innerHTML='';for(var i=0;i<S.badges.res.length;i++){var d=document.createElement('div');d.className='badge res';d.innerHTML=S.badges.res[i]+' <span onclick="rmBadge(\'res\','+i+')">&#x2715;</span>';rb.appendChild(d);}}
+  if(wb){wb.innerHTML='';for(var j=0;j<S.badges.weak.length;j++){var d2=document.createElement('div');d2.className='badge weak';d2.innerHTML=S.badges.weak[j]+' <span onclick="rmBadge(\'weak\','+j+')">&#x2715;</span>';wb.appendChild(d2);}}
+}
+
+function renderRels(){
+  var p=document.getElementById('rel-panel');if(!p) return;var h='';
+  for(var i=0;i<S.relationships.length;i++){var r=S.relationships[i];h+='<div class="rel-row"><div class="rel-name">'+r.name+'</div><div class="rel-disp">'+r.disp+'</div><div class="rel-spec">'+r.spec+'</div><button class="rmbtn" onclick="rmRel('+i+')">&#x2715;</button></div>';}
+  p.innerHTML=h;
+}
+
+function updatePoolUI(){
+  S.pool.cur=clamp(S.pool.cur,0,S.pool.max);
+  var cur=S.pool.cur,max=S.pool.max,pct=max>0?(cur/max)*100:0;
+  var el=document.getElementById('pool-n');if(el) el.textContent=cur;
+  el=document.getElementById('pool-mx-lbl');if(el) el.textContent='/ '+max;
+  el=document.getElementById('pool-fill');if(el) el.style.width=pct+'%';
+  el=document.getElementById('pool-inp');if(el) el.value=cur;
+  var ring=document.getElementById('pool-ring');
+  if(ring) ring.style.background='conic-gradient(var(--acc) 0%,var(--acc) '+pct+'%,#1a1a1a '+pct+'%)';
+  calcDerived();
+}
+
+function updatePactUI(){
+  var cur=S.pact.cur,max=S.pact.max,pct=max>0?(cur/max)*100:0;
+  var el=document.getElementById('pact-n');if(el) el.textContent=cur;
+  el=document.getElementById('pact-mx-lbl');if(el) el.textContent='/ '+max;
+  el=document.getElementById('pact-fill');if(el) el.style.width=pct+'%';
+  el=document.getElementById('pact-inp');if(el) el.value=cur;
+  var ring=document.getElementById('pact-ring');
+  if(ring) ring.style.background='conic-gradient(var(--red) 0%,var(--red) '+pct+'%,#1a1a1a '+pct+'%)';
+  calcDerived();
+}
+
+function adjPool(d){S.pool.cur=clamp(S.pool.cur+d,0,S.pool.max);updatePoolUI();}
+function setPool(v){S.pool.cur=clamp(v||0,0,S.pool.max);updatePoolUI();}
+function fullPool(){S.pool.cur=S.pool.max;updatePoolUI();}
+function adjPact(d){S.pact.cur=clamp(S.pact.cur+d,0,S.pact.max);updatePactUI();}
+function setPact(v){S.pact.cur=clamp(v||0,0,S.pact.max);updatePactUI();}
+function fullPact(){S.pact.cur=S.pact.max;updatePactUI();}
+
+function adjMag(id,d){
+  if(!S.skillMag) S.skillMag={};
+  S.skillMag[id]=Math.max(0,(S.skillMag[id]||0)+d);
+  var el=document.getElementById('mag-n-'+id);
+  if(el) el.textContent=S.skillMag[id];
+}
+function onAttr(k,v){
+  S.attrs[k]=v||0;
+  calcDerived();
+  if(k==='con') renderResources();
+}
+function onSkB(id,v){S.skills[id]=(v||0)-(trBonus[id]||0);calcDerived();}
+function adjMag(id,delta){
+  if(!S.skills_mag) S.skills_mag={};
+  S.skills_mag[id]=Math.max(0,(S.skills_mag[id]||0)+delta);
+  var el=document.getElementById('mag-'+id);
+  if(el) el.textContent=S.skills_mag[id];
+}
+function onLevel(){S.level=parseInt(document.getElementById('level-i').value)||1;calcDerived();renderLvlTable();}
+
+function toggleTier(key,i,t){
+  S.train[i].filled=t<S.train[i].filled?t:t+1;
+  for(var p=0;p<TRAIN[i].max;p++){
+    var pip=document.getElementById('tp-'+key+'-'+p);if(!pip) continue;
+    if(p<S.train[i].filled){if(!pip.classList.contains('on')){pip.classList.add('on');pip.style.animation='pip-pop .15s ease-out';(function(pp){setTimeout(function(){pp.style.animation='';},200);})(pip);}}
+    else pip.classList.remove('on');
+  }
+  calcDerived();renderChoiceInputs();
+}
+
+function onChoice(key,i,t,val){
+  var ck=key+'_t'+t;if(!S.train[i].choices) S.train[i].choices={};
+  S.train[i].choices[ck]=val;calcDerived();renderChoicesSummary();
+}
+
+function useAb(poolKey,idx){
+  var abilities=poolKey==='p'?S.pAbilities:S.sAbilities;
+  var ab=abilities[idx];if(!ab) return;
+  // Black Meteorite: free but one-use
+  if(ab.special&&poolKey==='p'){
+    if(S.meteoriteUsed) return;
+    if(!S.wings){alert('Black Meteorite requires Winged Form to be active.');return;}
+    S.meteoriteUsed=true;
+    renderAbilityPool('ab-grid-pact',S.pAbilities,'p');
+    triggerSp();
+    return;
+  }
+  var pool=poolKey==='p'?S.pact:S.pool;
+  if(ab.cost>0&&pool.cur<ab.cost) return;
+  if(ab.cost>0){pool.cur=Math.max(0,pool.cur-ab.cost);if(poolKey==='p') updatePactUI(); else updatePoolUI();}
+  if(poolKey==='s'&&ab.name==='Conjure Swords') triggerSword();
+  else if(poolKey==='p') triggerRed();
+  else triggerPri();
+}
+function advanceWingTurn(){
+  if(!S.wings) return;
+  S.pact.cur=Math.max(0,S.pact.cur-10);
+  if(S.pact.cur<=0){
+    // Auto-deactivate
+    S.wings=false;
+    var btn=document.getElementById('wing-btn');
+    if(btn){btn.textContent='INACTIVE';btn.style.borderColor='var(--b2)';btn.style.color='var(--txt2)';btn.style.background='var(--bg2)';}
+    var wo=document.getElementById('wing-overlay');
+    if(wo){wo.classList.remove('show');wo.classList.add('hide');setTimeout(function(){wo.style.display='none';wo.classList.remove('hide');},400);}
+    var atb=document.getElementById('wing-turn-btn');if(atb) atb.style.display='none';
+    alert('Covenant Pool depleted \u2014 Winged Form collapsed.');
+  }
+  updatePactUI();
+}
+
+function onAbCost(poolKey,idx,v){
+  var ab=poolKey==='p'?S.pAbilities[idx]:S.sAbilities[idx];if(ab) ab.cost=v||0;
+  renderAbilityPool('ab-grid-stamina',S.sAbilities,'s');
+  renderAbilityPool('ab-grid-pact',S.pAbilities,'p');
+}
+
+function rmAb(poolKey,idx){
+  if(poolKey==='p') S.pAbilities.splice(idx,1); else S.sAbilities.splice(idx,1);
+  renderAbilityPool('ab-grid-stamina',S.sAbilities,'s');
+  renderAbilityPool('ab-grid-pact',S.pAbilities,'p');
+}
+
+function addAbility(poolKey){
+  var nameEl=poolKey==='p'?document.getElementById('na-p-name'):document.getElementById('na-s-name');
+  var name=(nameEl&&nameEl.value||'').trim();if(!name) return;
+  var desc=(document.getElementById(poolKey==='p'?'na-p-desc':'na-s-desc').value||'').trim();
+  var cost=parseInt((document.getElementById(poolKey==='p'?'na-p-cost':'na-s-cost').value)||'0')||0;
+  if(poolKey==='p') S.pAbilities.push({name:name,desc:desc,cost:cost,special:false});
+  else S.sAbilities.push({name:name,desc:desc,cost:cost,special:false});
+  nameEl.value='';
+  renderAbilityPool('ab-grid-stamina',S.sAbilities,'s');
+  renderAbilityPool('ab-grid-pact',S.pAbilities,'p');
+}
+
+function calcCW(){
+  var total=0;
+  var re=/(\d+(?:\.\d+)?)\s*[Ll]bs?/;
+  // weapons notes
+  for(var i=0;i<S.weapons.length;i++){
+    var m=re.exec(S.weapons[i].notes||'');
+    if(m) total+=parseFloat(m[1]);
+  }
+  // inventory tags
+  for(var j=0;j<S.inventory.length;j++){
+    var m2=re.exec(S.inventory[j].tag||'');
+    if(m2) total+=parseFloat(m2[1]);
+  }
+  // equipped armor weight
+  total+=(S.armorLbs||0);
+  // supplies (4 supplies = 1 Lb)
+  total+=Math.floor((S.sup.cur||0)/4);
+  total=Math.round(total);
+  S.cw.cur=total;
+  var el=document.getElementById('cw-c');
+  if(el) el.value=total;
+}
+function adj(k,d){
+  if(k==='hp'){S.hp.cur=clamp(S.hp.cur+d,0,S.hp.max);document.getElementById('hp-c').value=S.hp.cur;}
+  else if(k==='ar'){S.armor.cur=clamp(S.armor.cur+d,0,S.armor.max);document.getElementById('ar-c').value=S.armor.cur;}
+  else if(k==='mv'){S.move.cur=clamp(S.move.cur+d,0,S.move.max);document.getElementById('mv-c').value=S.move.cur;}
+  else if(k==='sup'){
+    S.sup.cur=clamp(S.sup.cur+d,0,S.sup.max);
+    document.getElementById('sup-c').value=S.sup.cur;
+    var sl=document.getElementById('sup-lbs');if(sl) sl.textContent=Math.floor(S.sup.cur/4)+' Lbs used';
+  }
+  else if(k==='cw'){S.cw.cur=clamp(S.cw.cur+d,0,9999);document.getElementById('cw-c').value=S.cw.cur;}
+}
+function rstMv(){var mx=parseInt(document.getElementById('mv-mx').value)||S.move.max;S.move.cur=mx;document.getElementById('mv-c').value=S.move.cur;}
+
+function toggleWings(){
+  S.wings=!S.wings;
+  var btn=document.getElementById('wing-btn');
+  var wo=document.getElementById('wing-overlay');
+  btn.textContent=S.wings?'ACTIVE — D6 Fire':'INACTIVE';
+  btn.style.borderColor=S.wings?'var(--red)':'var(--b2)';
+  btn.style.color=S.wings?'var(--red)':'var(--txt2)';
+  btn.style.background=S.wings?'rgba(204,17,17,.1)':'var(--bg2)';
+  if(wo){
+    wo.classList.remove('show','hide');
+    void wo.offsetWidth;
+    if(S.wings){wo.classList.add('show');}
+    else{wo.classList.add('hide');setTimeout(function(){wo.style.display='none';wo.classList.remove('hide');},400);}
+  }
+  if(S.wings){
+    // Winged Form: deduct 3 move for activation, reset Black Meteorite
+    S.move.cur=Math.max(0,S.move.cur-3);document.getElementById('mv-c').value=S.move.cur;
+    S.meteoriteUsed=false;
+    // Show/update advance turn button
+    var atb=document.getElementById('wing-turn-btn');if(atb) atb.style.display='flex';
+    renderAbilityPool('ab-grid-pact',S.pAbilities,'p');
+  } else {
+    var atb2=document.getElementById('wing-turn-btn');if(atb2) atb2.style.display='none';
+    S.meteoriteUsed=false;
+    renderAbilityPool('ab-grid-pact',S.pAbilities,'p');
+  }
+}
+
+function toggleShadow(){
+  S.shadow=!S.shadow;
+  var btn=document.getElementById('shadow-btn');
+  btn.textContent=S.shadow?'ACTIVE':'INACTIVE';
+  btn.style.borderColor=S.shadow?'var(--acc)':'var(--b2)';
+  btn.style.color=S.shadow?'var(--acc)':'var(--txt2)';
+  btn.style.background=S.shadow?'rgba(180,180,180,.08)':'var(--bg2)';
+}
+
+function togRP(key,idx,max){
+  var k='res_'+key,cur=S[k]||0;
+  S[k]=idx<cur?idx:idx+1;renderResources();
+}
+
+function addBadge(type){var inp=document.getElementById('new-'+type),v=inp?inp.value.trim():'';if(!v) return;S.badges[type].push(v);if(inp) inp.value='';renderBadges();}
+function rmBadge(type,i){S.badges[type].splice(i,1);renderBadges();}
+function addWpn(){var name=(document.getElementById('nw-name').value||'').trim();if(!name) return;S.weapons.push({name:name,dmg:(document.getElementById('nw-dmg').value||'').trim(),notes:(document.getElementById('nw-notes').value||'').trim(),type:document.getElementById('nw-type').value});document.getElementById('nw-name').value='';document.getElementById('nw-dmg').value='';document.getElementById('nw-notes').value='';renderWeapons();}
+function rmWpn(i){S.weapons.splice(i,1);renderWeapons();}
+function addPerk(){var name=(document.getElementById('np-name').value||'').trim();if(!name) return;S.perks.push({name:name,type:(document.getElementById('np-type').value||'').trim(),desc:(document.getElementById('np-desc').value||'').trim(),special:false});document.getElementById('np-name').value='';document.getElementById('np-type').value='';document.getElementById('np-desc').value='';renderPerks();}
+function rmPerk(i){S.perks.splice(i,1);renderPerks();}
+function addAct(){var v=(document.getElementById('na-act').value||'').trim();if(!v) return;S.actions.push(v);document.getElementById('na-act').value='';renderActions();}
+function rmAct(i){S.actions.splice(i,1);renderActions();}
+function addBon(){var v=(document.getElementById('na-bon').value||'').trim();if(!v) return;S.bonuses.push(v);document.getElementById('na-bon').value='';renderActions();}
+function rmBon(i){S.bonuses.splice(i,1);renderActions();}
+function addSts(){var name=(document.getElementById('ns-name').value||'').trim();if(!name) return;S.statuses.push({name:name,type:document.getElementById('ns-type').value,dur:(document.getElementById('ns-dur').value||'Ongoing').trim()});document.getElementById('ns-name').value='';document.getElementById('ns-dur').value='';renderStatuses();}
+function rmSts(i){S.statuses.splice(i,1);renderStatuses();}
+function addInv(){var name=(document.getElementById('ni-name').value||'').trim();if(!name) return;S.inventory.push({name:name,tag:(document.getElementById('ni-tag').value||'').trim(),quest:document.getElementById('ni-q').checked});document.getElementById('ni-name').value='';document.getElementById('ni-tag').value='';document.getElementById('ni-q').checked=false;renderInventory();}
+function rmInv(i){S.inventory.splice(i,1);renderInventory();}
+function addRel(){var name=(document.getElementById('nr-name').value||'').trim();if(!name) return;S.relationships.push({name:name,disp:(document.getElementById('nr-disp').value||'').trim(),spec:(document.getElementById('nr-spec').value||'').trim()});document.getElementById('nr-name').value='';document.getElementById('nr-disp').value='';document.getElementById('nr-spec').value='';renderRels();}
+function rmRel(i){S.relationships.splice(i,1);renderRels();}
+
+var _tt=document.getElementById('tt'),_ttTier=document.getElementById('tt-tier'),_ttBody=document.getElementById('tt-body');
+function showTT(e,key,i,t){var td=TRAIN[i];if(!td) return;var tier=td.tiers[t];if(!tier) return;_ttTier.textContent='Tier '+(t+1);_ttBody.textContent=tier.d||'';_tt.classList.add('show');posTT(e);}
+function hideTT(){_tt.classList.remove('show');}
+function posTT(e){_tt.style.left=Math.min(e.clientX+14,window.innerWidth-272)+'px';_tt.style.top=(e.clientY+12)+'px';}
+document.addEventListener('mousemove',function(e){if(_tt.classList.contains('show')) posTT(e);});
+
+function triggerPri(){var el=document.getElementById('anim-pri');el.classList.remove('fire');void el.offsetWidth;el.classList.add('fire');el.addEventListener('animationend',function(){el.classList.remove('fire');},{once:true});var ring=document.getElementById('pool-ring');if(ring){ring.classList.remove('bloom');void ring.offsetWidth;ring.classList.add('bloom');ring.addEventListener('animationend',function(){ring.classList.remove('bloom');},{once:true});}}
+function triggerRed(){var el=document.getElementById('anim-red');el.classList.remove('fire');void el.offsetWidth;el.classList.add('fire');el.addEventListener('animationend',function(){el.classList.remove('fire');},{once:true});var ring=document.getElementById('pact-ring');if(ring){ring.classList.remove('red-bloom');void ring.offsetWidth;ring.classList.add('red-bloom');ring.addEventListener('animationend',function(){ring.classList.remove('red-bloom');},{once:true});}}
+function triggerSp(){['anim-burst','anim-wave','anim-tint'].forEach(function(id){var el=document.getElementById(id);el.classList.remove('fire');void el.offsetWidth;el.classList.add('fire');el.addEventListener('animationend',function(){el.classList.remove('fire');},{once:true});});}
+function triggerSword(){var el=document.getElementById('sword-anim');el.classList.remove('fire');void el.offsetWidth;el.classList.add('fire');el.addEventListener('animationend',function(){el.classList.remove('fire');},{once:true});}
+function toggleColl(bId,tId){var b=document.getElementById(bId),t=document.getElementById(tId);if(b&&t){b.classList.toggle('coll');t.classList.toggle('coll');}}
+
+function gatherDynamic(){
+  var el;
+  el=document.getElementById('money-i');if(el) S.money=el.value;
+  el=document.getElementById('char-age');if(el) S.age=el.value;
+  el=document.getElementById('char-bounty');if(el) S.bounty=el.value;
+  el=document.getElementById('inv-notes');if(el) S.invNotes=el.value;
+  el=document.getElementById('sess-notes');if(el) S.sessNotes=el.value;
+  el=document.getElementById('hp-c');if(el) S.hp.cur=parseInt(el.value)||0;
+  el=document.getElementById('ar-c');if(el) S.armor.cur=parseInt(el.value)||0;
+  el=document.getElementById('mv-c');if(el) S.move.cur=parseInt(el.value)||0;
+  el=document.getElementById('sup-c');if(el) S.sup.cur=parseInt(el.value)||0;
+  el=document.getElementById('cw-c');if(el) S.cw.cur=parseInt(el.value)||0;
+  el=document.getElementById('level-i');if(el) S.level=parseInt(el.value)||1;
+  el=document.getElementById('pool-inp');if(el) S.pool.cur=parseInt(el.value)||0;
+  el=document.getElementById('pact-inp');if(el) S.pact.cur=parseInt(el.value)||0;
+  if(!S.skillMag) S.skillMag={};
+  for(var i=0;i<SKILLS.length;i++){
+    el=document.getElementById('skb-'+SKILLS[i].id);
+    if(el) S.skills[SKILLS[i].id]=parseInt(el.value)||0;
+    var mn=document.getElementById('mag-n-'+SKILLS[i].id);
+    if(mn) S.skillMag[SKILLS[i].id]=parseInt(mn.textContent)||0;
+  }
+  for(var ti=0;ti<TRAIN.length;ti++){var td=TRAIN[ti];for(var t=0;t<td.max;t++){if(!td.tiers[t]||!td.tiers[t].c) continue;var ck=td.key+'_t'+t;el=document.getElementById('tci-'+ck);if(el) S.train[ti].choices[ck]=el.value;}}
+}
+
+function saveState(){
+  gatherDynamic();var json=JSON.stringify(S,null,2);localStorage.setItem('asta_v2',json);
+  try{navigator.clipboard.writeText(json).then(function(){document.getElementById('save-st').textContent='Saved + copied \u2014 '+new Date().toLocaleTimeString();});}
+  catch(e){document.getElementById('save-st').textContent='Saved to browser \u2014 '+new Date().toLocaleTimeString();}
+}
+
+function loadState(){
+  var json=prompt('Paste Save State JSON (blank = load from browser):');var loaded;
+  if(json&&json.trim()){try{loaded=JSON.parse(json);}catch(e){alert('Invalid JSON.');return;}}
+  else{var stored=localStorage.getItem('asta_v2');if(!stored){alert('No saved state.');return;}loaded=JSON.parse(stored);}
+  Object.assign(S,loaded);initAll();
+  document.getElementById('save-st').textContent='Loaded \u2014 '+new Date().toLocaleTimeString();
+}
+
+function loadDefaults(){
+  S.train[0].choices={str_t0:'athletics'};
+  S.train[1].choices={dex_t1:'thieving'};
+  S.train[4].choices={wis_t1:'heal'};
+
+  S.weapons=[
+    {name:'Demon-Slayer Sword',dmg:'D10',notes:'D5 Physical + D5 Shadow \u00b7 +15 Lbs \u00b7 Equipped',type:'special'},
+    {name:'Demon-Dweller Sword',dmg:'D6',notes:'D3 Physical + D3 Shadow \u00b7 +7 Lbs',type:'special'},
+    {name:'Demon-Destroyer Sword',dmg:'D6',notes:'D3 Physical + D3 Shadow \u00b7 +7 Lbs',type:'special'},
+    {name:'Blue Lightsaber',dmg:'D9',notes:'Energy \u00b7 +3 Lbs',type:'energy'},
+    {name:'Purple Lightsaber',dmg:'D9',notes:'Energy \u00b7 +3 Lbs',type:'energy'},
+    {name:'Alien Blaster (New)',dmg:'D12 Electric',notes:'+7 Lbs \u00b7 7 Bullets',type:'energy'},
+    {name:'Alien Blaster (Used)',dmg:'D12 Electric',notes:'+7 Lbs',type:'energy'},
+    {name:'TIGRIS Operator',dmg:'\u2014',notes:'+15 Lbs',type:'std'}
+  ];
+
+  S.perks=[
+    {name:'Nen Resistance',type:'Passive',desc:'Anti-Nen physiology. <strong>Immune to Nen effects.</strong> Nen damage halved.',special:false},
+    {name:"Demon's Will",type:'Grimoire Passive',desc:'On kill: recover <strong>1 Stamina (10).</strong> Also triggers on Shadow-coated weapon kills.',special:false},
+    {name:"Sparda Pact",type:'Pact \u2014 Demonic',desc:'Brand pulses with infernal light. <strong>Fire Resistance</strong> granted. Winged Form: +5 Move (+3 flight), D6 Fire on all strikes, 10 Covenant/turn. Covenant Pool 30. Sparda silent until Epic kill.',special:true},
+    {name:'Fire Resistance',type:'Pact Passive',desc:'Sparda pact. <strong>Fire damage halved.</strong> Stacks with Nen resistance.',special:false},
+    {name:'Anti-Nen Grimoire',type:'Nen Ability (WIS T4)',desc:'Asta’s Nen Ability. Swords are a physical extension of his anti-magic energy. <strong>Any Nen they touch is cancelled and deleted</strong> — Nen armor nullified, Nen abilities disrupted on contact, Nen users’ abilities fail against the blade. 10 Stamina per sword conjured (max 3 active).',special:false},
+    {name:'Dodge +2 / Block +2',type:'Training',desc:'DEX T1 and CON T1. Both combat stats <strong>+2 flat.</strong>',special:false}
+  ];
+
+  S.actions=[
+    '<strong>Demon-Slayer Strike</strong> \u2014 <span class="roll">D10</span> (D5 Phys + D5 Shadow). Melee. Negates Nen armor.',
+    '<strong>Conjure Swords</strong> \u2014 <span class="roll">\u221210 Stamina</span>. All three grimoire swords materialize.',
+    '<strong>Ranged</strong> \u2014 Alien Blaster <span class="roll">D12 Electric</span> or Lightsaber <span class="roll">D9</span>.'
+  ];
+
+  S.bonuses=[
+    '<strong>Grimoire Swap</strong> \u2014 Switch equipped grimoire sword. <span class="roll">Free</span>.',
+    '<strong>Intimidate (Combat)</strong> \u2014 CHR check. Success: target \u22122 rolls, must attack Asta.'
+  ];
+
+  S.relationships=[
+    {name:'Genji',disp:'Strained',spec:'Guild Agent \u00b7 Moon base fallout'},
+    {name:'Aidan',disp:'Cautious',spec:'Hell Survivor \u00b7 Fire Attunement'},
+    {name:'Sparda',disp:'Silent',spec:'Pact \u00b7 Evaluating \u00b7 Needs Epic kill'},
+    {name:'Invincible',disp:'Unknown',spec:'Moon base \u00b7 Unresolved'}
+  ];
+
+  S.inventory=[
+    {name:'3 ION Batteries',tag:'+3 Lbs',quest:false},
+    {name:'Wallet',tag:'',quest:false},
+    {name:'Level 2 Keycard (Orange)',tag:'',quest:true},
+    {name:'Blue Keycard',tag:'',quest:true},
+    {name:'Red Keycard',tag:'',quest:true},
+    {name:'Blue Lightsaber D9',tag:'+3 Lbs',quest:false},
+    {name:'Purple Lightsaber D9',tag:'+3 Lbs',quest:false},
+    {name:'Tablet of Suga',tag:'+10 Lbs',quest:true},
+    {name:'TIGRIS Operator',tag:'+15 Lbs',quest:false},
+    {name:'Federation Badge',tag:'',quest:false},
+    {name:'Master Chief Armor 0/70',tag:'30 Lbs',quest:false},
+    {name:'7 Cigarettes',tag:'',quest:false},
+    {name:'Lighter',tag:'',quest:false},
+    {name:'8 Vials \u2014 Red Liquid',tag:'',quest:false},
+    {name:'5 Vials \u2014 Empty',tag:'',quest:false},
+    {name:'Cursed Skull of Igor',tag:'+3 Lbs',quest:true},
+    {name:'Alien Blaster (Used) D12',tag:'+7 Lbs',quest:false},
+    {name:'Alien Blaster (New) D12',tag:'+7 Lbs',quest:false},
+    {name:'7 Bullets',tag:'',quest:false}
+  ];
+  S.invNotes='Equipped: Hazmat Suit +10 Lbs\n4 Supplies = 1 Lbs (100 Sup = 25 Lbs)\nFederation Sgt. rank';
+}
+
+function initAll(){
+  var el;
+  el=document.getElementById('level-i');if(el) el.value=S.level;
+  // Stamina starts at full (recharges fully between sessions)
+  S.pool.cur=S.pool.max;
+  el=document.getElementById('pool-inp');if(el) el.value=S.pool.cur;
+  el=document.getElementById('pact-inp');if(el) el.value=S.pact.cur;
+  el=document.getElementById('hp-c');if(el) el.value=S.hp.cur;
+  el=document.getElementById('ar-c');if(el) el.value=S.armor.cur;
+  el=document.getElementById('mv-c');if(el) el.value=S.move.cur;
+  el=document.getElementById('sup-c');if(el) el.value=S.sup.cur;
+  el=document.getElementById('cw-c');if(el) el.value=S.cw.cur;
+  el=document.getElementById('money-i');if(el) el.value=S.money||'8,000,000';
+  el=document.getElementById('armor-lbs');if(el) el.value=S.armorLbs||10;
+  el=document.getElementById('char-age');if(el) el.value=S.age||'23';
+  el=document.getElementById('char-bounty');if(el) el.value=S.bounty||'—';
+  el=document.getElementById('inv-notes');if(el) el.value=S.invNotes||'';
+  el=document.getElementById('sess-notes');if(el) el.value=S.sessNotes||'';
+  calcDerived();  // run first to populate trBonus for boost display
+  renderAttrs();renderSkills();renderTraining();
+  renderAbilityPool('ab-grid-stamina',S.sAbilities,'s');
+  renderAbilityPool('ab-grid-pact',S.pAbilities,'p');
+  renderLvlTable();renderResources();renderWeapons();renderPerks();
+  renderActions();renderStatuses();renderInventory();renderBadges();renderRels();
+  updatePoolUI();updatePactUI();calcDerived();
+}
+
+loadDefaults();
+initAll();
+</script>
+</body>
+</html>
+    
+
+
